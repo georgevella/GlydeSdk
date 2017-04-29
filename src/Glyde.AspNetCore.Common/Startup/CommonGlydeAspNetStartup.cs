@@ -1,0 +1,65 @@
+using System;
+using System.Linq;
+using System.Reflection;
+using Glyde.AspNetCore.ApiExplorer;
+using Glyde.AspNetCore.Bootstrapping;
+using Glyde.AspNetCore.Controllers;
+using Glyde.AspNetCore.Versioning;
+using Glyde.Bootstrapper;
+using Glyde.Di.SimpleInjector;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ApplicationParts;
+using Microsoft.AspNetCore.Mvc.Controllers;
+using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.AspNetCore.Mvc.ViewComponents;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyModel;
+using Microsoft.Extensions.Logging;
+using SimpleInjector;
+using SimpleInjector.Integration.AspNetCore;
+using SimpleInjector.Integration.AspNetCore.Mvc;
+
+namespace Glyde.AspNetCore.Startup
+{
+    public abstract class CommonGlydeAspNetStartup
+    {
+        private readonly Container _container = new Container();
+
+        protected CommonGlydeAspNetStartup(IHostingEnvironment env)
+        {
+            var builder = new ConfigurationBuilder()
+                .SetBasePath(env.ContentRootPath)
+                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
+                .AddEnvironmentVariables();
+            Configuration = builder.Build();
+
+            _container.Options.DefaultScopedLifestyle = new AspNetRequestLifestyle();
+        }
+
+        public IConfigurationRoot Configuration { get; }
+
+        protected void ConfigureGlydeServices(ApplicationPartManager applicationPartManager, IServiceCollection services)
+        {
+            BootstrapApplication
+                .Using(new SimpleInjectorDiBootstrapperStage(_container))
+                .Using(new AspNetCoreBootstrapperStage(applicationPartManager, services, _container))
+                .Run();                       
+        }
+
+        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        public virtual void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+        {
+            loggerFactory.AddConsole(Configuration.GetSection("Logging"));
+            loggerFactory.AddDebug();
+
+            app.UseSimpleInjectorAspNetRequestScoping(_container);
+
+            app.UseMvc();
+        }
+    }
+}
