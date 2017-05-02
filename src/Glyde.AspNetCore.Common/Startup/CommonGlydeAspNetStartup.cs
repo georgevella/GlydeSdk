@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Reflection;
+using System.Threading;
 using Glyde.AspNetCore.ApiExplorer;
 using Glyde.AspNetCore.Bootstrapping;
 using Glyde.AspNetCore.Controllers;
@@ -45,6 +46,8 @@ namespace Glyde.AspNetCore.Startup
 
         protected void ConfigureGlydeServices(ApplicationPartManager applicationPartManager, IServiceCollection services)
         {
+            services.AddSingleton<IHttpContextAccessor, OwnHttpContextAccessor>();
+
             BootstrapApplication
                 .Using(new SimpleInjectorDiBootstrapperStage(_container))
                 .Using(new AspNetCoreBootstrapperStage(applicationPartManager, services, _container))
@@ -57,9 +60,41 @@ namespace Glyde.AspNetCore.Startup
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
 
+            // register http context accessor from app DI
+            _container.Register( () => app.ApplicationServices.GetRequiredService<IHttpContextAccessor>());            
+
             app.UseSimpleInjectorAspNetRequestScoping(_container);
 
             app.UseMvc();
+        }
+
+//        _container.Register(GetAspNetServiceProvider<UserManager<MyUser>>(app));
+//_container.Register(GetAspNetServiceProvider<RoleManager<IdentityRole>>(app));
+//_container.Register(GetAspNetServiceProvider<SignInManager<MyUser>>(app));
+//
+//        private static Func<T> GetAspNetServiceProvider<T>(IApplicationBuilder app)
+//        {
+//            var accessor = app.ApplicationServices.GetService<IHttpContextAccessor>();
+//            return () => accessor.HttpContext.RequestServices.GetRequiredService<T>();
+//        }
+    }
+
+    public class OwnHttpContextAccessor : IHttpContextAccessor
+    {
+        private AsyncLocal<HttpContext> _httpContextCurrent = new AsyncLocal<HttpContext>();
+
+        public HttpContext HttpContext
+        {
+            get
+            {
+                if (_httpContextCurrent.Value == null)
+                    return null;
+                return this._httpContextCurrent.Value;
+            }
+            set
+            {
+                this._httpContextCurrent.Value = value;
+            }
         }
     }
 }

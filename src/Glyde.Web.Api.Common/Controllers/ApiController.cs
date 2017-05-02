@@ -1,13 +1,15 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
+using Glyde.Web.Api.Controllers.Results;
 using Glyde.Web.Api.Resources;
 
 namespace Glyde.Web.Api.Controllers
 {
-
     public abstract class ApiController<TResource, TResourceId> : IApiController<TResource, TResourceId>
         where TResource : Resource<TResourceId>
     {
+#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
         public virtual async Task<IEnumerable<TResource>> GetAll()
         {
             throw new System.NotImplementedException();
@@ -23,7 +25,8 @@ namespace Glyde.Web.Api.Controllers
             throw new System.NotImplementedException();
         }
 
-        public virtual async Task<TResourceId> Create(TResource resource)
+
+        public virtual async Task<CreateResourceResult<TResourceId>> Create(TResource resource)
         {
             throw new System.NotImplementedException();
         }
@@ -32,15 +35,17 @@ namespace Glyde.Web.Api.Controllers
         {
             throw new System.NotImplementedException();
         }
+#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
+        protected CreateResourceResult<TResourceId> NotCreated()
+        {
+            return new CreateResourceResult<TResourceId>(false);
+        }
+
+        protected CreateResourceResult<TResourceId> Created(TResourceId id)
+        {
+            return new CreateResourceResult<TResourceId>(true, id);
+        }
+
     }
 
-    public interface IApiController<TResource, TResourceId>
-        where TResource : Resource<TResourceId>
-    {
-        Task<IEnumerable<TResource>> GetAll();
-        Task<TResource> Get(TResourceId id);
-        Task<bool> Update(TResourceId id, TResource resource);
-        Task<TResourceId> Create(TResource resource);
-        Task<bool> Delete(TResourceId id);
-    }
 }

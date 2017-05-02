@@ -43,7 +43,7 @@ namespace Glyde.AspNetCore.Controllers
         public virtual async Task<IActionResult> GetAll()
         {            
             if (CanInvokeAction(() => _apiController.GetAll()))
-                return BadRequest();
+                return StatusCode(StatusCodes.Status405MethodNotAllowed);
 
             return new JsonResult(await _apiController.GetAll());
         }
@@ -53,7 +53,7 @@ namespace Glyde.AspNetCore.Controllers
         public virtual async Task<IActionResult> Get(TResourceId id)
         {
             if (CanInvokeAction(() => _apiController.Get(id)))
-                return BadRequest();
+                return StatusCode(StatusCodes.Status405MethodNotAllowed);
 
             try
             {
@@ -66,7 +66,7 @@ namespace Glyde.AspNetCore.Controllers
             }
             catch (Exception e)
             {
-                return BadRequest(e);
+                return BadRequest(e.ToString());
             }            
 
             return NotFound();
@@ -77,7 +77,7 @@ namespace Glyde.AspNetCore.Controllers
         public virtual async Task<IActionResult> Update(TResourceId id, [FromBody]TResource resource)
         {
             if (CanInvokeAction(() => _apiController.Update(id, resource)))
-                return BadRequest();
+                return StatusCode(StatusCodes.Status405MethodNotAllowed);
 
             try
             {
@@ -87,7 +87,7 @@ namespace Glyde.AspNetCore.Controllers
             }
             catch (Exception e)
             {
-                return BadRequest(e);
+                return BadRequest(e.ToString());
             }
         }
 
@@ -96,18 +96,22 @@ namespace Glyde.AspNetCore.Controllers
         public virtual async Task<IActionResult> Create([FromBody]TResource resource)
         {
             if (CanInvokeAction(() => _apiController.Create(resource)))
-                return BadRequest();
+                return StatusCode(StatusCodes.Status405MethodNotAllowed);
 
             try
             {
-                var id = await _apiController.Create(resource);
+                var result = await _apiController.Create(resource);
+                if (result.Successful)
+                {
+                    // TODO: build get uri from id returned above
+                    return Created(string.Empty, resource);
+                }
 
-                // TODO: build get uri from id returned above
-                return Created(string.Empty, resource);
+                return StatusCode(StatusCodes.Status304NotModified);
             }
             catch (Exception e)
             {
-                return BadRequest(e);
+                return BadRequest(e.ToString());
             }
         }
 
@@ -116,7 +120,7 @@ namespace Glyde.AspNetCore.Controllers
         public virtual async Task<IActionResult> Delete(TResourceId id)
         {
             if (CanInvokeAction(() => _apiController.Delete(id)))
-                return BadRequest();
+                return StatusCode(StatusCodes.Status405MethodNotAllowed);
 
             try
             {
@@ -124,7 +128,7 @@ namespace Glyde.AspNetCore.Controllers
             }
             catch (Exception e)
             {
-                return BadRequest(e);
+                return BadRequest(e.ToString());
             }
         }
     }

@@ -2,6 +2,6 @@
 {
     public abstract class Resource<TResourceId> : IResource
     {
-        TResourceId Id { get; set; }
+        public TResourceId Id { get; set; }
     }
 }

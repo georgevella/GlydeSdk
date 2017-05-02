@@ -31,15 +31,19 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "bootstrapping", "bootstrapp
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "configuration", "configuration", "{9A2404AE-0E7C-424A-85D1-5097B4396DC0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Glyde.NoSql", "Glyde.NoSql\Glyde.NoSql.csproj", "{DF98D8EA-DEC9-4942-A7F7-717472733A13}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Glyde.NoSql", "Glyde.NoSql\Glyde.NoSql.csproj", "{DF98D8EA-DEC9-4942-A7F7-717472733A13}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "sample", "sample", "{A290022E-6B55-4DAA-A3B5-0C26A12FAF88}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GlydeSdk.Sample.WebApi", "GlydeSdk.Sample.WebApi\GlydeSdk.Sample.WebApi.csproj", "{557B3B00-6B4C-4547-B002-264B0443A9CE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GlydeSdk.Sample.WebApi", "GlydeSdk.Sample.WebApi\GlydeSdk.Sample.WebApi.csproj", "{557B3B00-6B4C-4547-B002-264B0443A9CE}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "webapi", "webapi", "{C5A04C52-CD6B-42C9-A43F-D5A4D5B348C9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GlydeSdk.Sample.CompanionApi", "GlydeSdk.Sample.CompanionApi\GlydeSdk.Sample.CompanionApi.csproj", "{1213A384-9E94-4581-BF28-E48652CD5BC9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GlydeSdk.Sample.CompanionApi", "GlydeSdk.Sample.CompanionApi\GlydeSdk.Sample.CompanionApi.csproj", "{1213A384-9E94-4581-BF28-E48652CD5BC9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Glyde.Data", "Glyde.Data\Glyde.Data.csproj", "{17DF0288-3CF5-458C-B6F5-033101DBC852}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Glyde.Data.EfCore", "Glyde.Data.EfCore\Glyde.Data.EfCore.csproj", "{DCC0186A-7F5B-40AC-936D-8E6FA97D616D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -91,6 +95,14 @@ Global
 		{1213A384-9E94-4581-BF28-E48652CD5BC9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1213A384-9E94-4581-BF28-E48652CD5BC9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1213A384-9E94-4581-BF28-E48652CD5BC9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{17DF0288-3CF5-458C-B6F5-033101DBC852}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{17DF0288-3CF5-458C-B6F5-033101DBC852}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{17DF0288-3CF5-458C-B6F5-033101DBC852}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{17DF0288-3CF5-458C-B6F5-033101DBC852}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DCC0186A-7F5B-40AC-936D-8E6FA97D616D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DCC0186A-7F5B-40AC-936D-8E6FA97D616D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DCC0186A-7F5B-40AC-936D-8E6FA97D616D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DCC0186A-7F5B-40AC-936D-8E6FA97D616D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -108,5 +120,7 @@ Global
 		{557B3B00-6B4C-4547-B002-264B0443A9CE} = {C5A04C52-CD6B-42C9-A43F-D5A4D5B348C9}
 		{C5A04C52-CD6B-42C9-A43F-D5A4D5B348C9} = {A290022E-6B55-4DAA-A3B5-0C26A12FAF88}
 		{1213A384-9E94-4581-BF28-E48652CD5BC9} = {C5A04C52-CD6B-42C9-A43F-D5A4D5B348C9}
+		{17DF0288-3CF5-458C-B6F5-033101DBC852} = {7A8E1E64-5EC1-4B37-8447-4BC73AB81B4F}
+		{DCC0186A-7F5B-40AC-936D-8E6FA97D616D} = {7A8E1E64-5EC1-4B37-8447-4BC73AB81B4F}
 	EndGlobalSection
 EndGlobal
