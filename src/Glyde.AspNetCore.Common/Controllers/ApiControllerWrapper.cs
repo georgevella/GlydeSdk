@@ -7,6 +7,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using Glyde.AspNetCore.Versioning;
 using Glyde.Web.Api.Controllers;
+using Glyde.Web.Api.Controllers.Results;
 using Glyde.Web.Api.Resources;
 using Glyde.Web.Api.Versioning;
 using Microsoft.AspNetCore.Http;
@@ -34,14 +35,14 @@ namespace Glyde.AspNetCore.Controllers
 
         private bool CanInvokeAction(Expression<Action> actionExpression)
         {
-            var method = ((MethodCallExpression) actionExpression.Body).Method;
+            var method = ((MethodCallExpression)actionExpression.Body).Method;
             return _methods.Contains(method);
         }
 
         [HttpGet]
         [Route("")]
         public virtual async Task<IActionResult> GetAll()
-        {            
+        {
             if (CanInvokeAction(() => _apiController.GetAll()))
                 return StatusCode(StatusCodes.Status405MethodNotAllowed);
 
@@ -67,7 +68,7 @@ namespace Glyde.AspNetCore.Controllers
             catch (Exception e)
             {
                 return BadRequest(e.ToString());
-            }            
+            }
 
             return NotFound();
         }
@@ -101,13 +102,18 @@ namespace Glyde.AspNetCore.Controllers
             try
             {
                 var result = await _apiController.Create(resource);
-                if (result.Successful)
+                switch (result.Type)
                 {
-                    // TODO: build get uri from id returned above
-                    return Created(string.Empty, resource);
-                }
+                    case CreateResourceResultType.Success:
+                        // TODO: build get uri from id returned above
+                        return Created(string.Empty, resource);
+                    case CreateResourceResultType.AlreadyExists:
+                        return StatusCode(StatusCodes.Status409Conflict);
 
-                return StatusCode(StatusCodes.Status304NotModified);
+                    case CreateResourceResultType.Failed:
+                    default:
+                        return StatusCode(StatusCodes.Status304NotModified);
+                }
             }
             catch (Exception e)
             {

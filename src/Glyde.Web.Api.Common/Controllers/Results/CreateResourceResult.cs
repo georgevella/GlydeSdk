@@ -2,14 +2,21 @@
 {
     public class CreateResourceResult<TResourceId>
     {
-        public CreateResourceResult(bool successful, TResourceId id = default (TResourceId))
+        public CreateResourceResult(CreateResourceResultType type, TResourceId id = default(TResourceId))
         {
-            Successful = successful;
+            Type = type;
             Id = id;
         }
 
-        public bool Successful { get; }
+        public CreateResourceResultType Type { get; }
 
         public TResourceId Id { get; }
+    }
+
+    public enum CreateResourceResultType
+    {
+        Failed,
+        AlreadyExists,
+        Success
     }
 }

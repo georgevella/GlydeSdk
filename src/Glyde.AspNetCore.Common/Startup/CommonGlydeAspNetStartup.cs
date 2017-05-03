@@ -46,12 +46,12 @@ namespace Glyde.AspNetCore.Startup
 
         protected void ConfigureGlydeServices(ApplicationPartManager applicationPartManager, IServiceCollection services)
         {
-            services.AddSingleton<IHttpContextAccessor, OwnHttpContextAccessor>();
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
             BootstrapApplication
                 .Using(new SimpleInjectorDiBootstrapperStage(_container))
                 .Using(new AspNetCoreBootstrapperStage(applicationPartManager, services, _container))
-                .Run();                       
+                .Run();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -61,22 +61,22 @@ namespace Glyde.AspNetCore.Startup
             loggerFactory.AddDebug();
 
             // register http context accessor from app DI
-            _container.Register( () => app.ApplicationServices.GetRequiredService<IHttpContextAccessor>());            
+            _container.Register(() => app.ApplicationServices.GetRequiredService<IHttpContextAccessor>());
 
             app.UseSimpleInjectorAspNetRequestScoping(_container);
 
             app.UseMvc();
         }
 
-//        _container.Register(GetAspNetServiceProvider<UserManager<MyUser>>(app));
-//_container.Register(GetAspNetServiceProvider<RoleManager<IdentityRole>>(app));
-//_container.Register(GetAspNetServiceProvider<SignInManager<MyUser>>(app));
-//
-//        private static Func<T> GetAspNetServiceProvider<T>(IApplicationBuilder app)
-//        {
-//            var accessor = app.ApplicationServices.GetService<IHttpContextAccessor>();
-//            return () => accessor.HttpContext.RequestServices.GetRequiredService<T>();
-//        }
+        //        _container.Register(GetAspNetServiceProvider<UserManager<MyUser>>(app));
+        //_container.Register(GetAspNetServiceProvider<RoleManager<IdentityRole>>(app));
+        //_container.Register(GetAspNetServiceProvider<SignInManager<MyUser>>(app));
+        //
+        //        private static Func<T> GetAspNetServiceProvider<T>(IApplicationBuilder app)
+        //        {
+        //            var accessor = app.ApplicationServices.GetService<IHttpContextAccessor>();
+        //            return () => accessor.HttpContext.RequestServices.GetRequiredService<T>();
+        //        }
     }
 
     public class OwnHttpContextAccessor : IHttpContextAccessor

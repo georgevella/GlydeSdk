@@ -38,12 +38,17 @@ namespace Glyde.Web.Api.Controllers
 #pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
         protected CreateResourceResult<TResourceId> NotCreated()
         {
-            return new CreateResourceResult<TResourceId>(false);
+            return new CreateResourceResult<TResourceId>(CreateResourceResultType.Failed);
+        }
+
+        protected CreateResourceResult<TResourceId> AlreadyExists()
+        {
+            return new CreateResourceResult<TResourceId>(CreateResourceResultType.AlreadyExists);
         }
 
         protected CreateResourceResult<TResourceId> Created(TResourceId id)
         {
-            return new CreateResourceResult<TResourceId>(true, id);
+            return new CreateResourceResult<TResourceId>(CreateResourceResultType.Success, id);
         }
 
     }
