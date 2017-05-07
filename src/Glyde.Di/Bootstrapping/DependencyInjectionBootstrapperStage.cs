@@ -14,7 +14,7 @@ namespace Glyde.Di.Bootstrapping
             var bootstrappers = GetBootstrappers(assemblies);
             var containerBuilder = new ContainerBuilder();
 
-            containerBuilder.For<IServiceProvider>().Use(GetServiceProvider);
+            containerBuilder.For<IServiceProvider>().Use(GetServiceProvider).AsSingleton();
 
             foreach (var bootstrapper in bootstrappers)
             {

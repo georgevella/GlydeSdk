@@ -23,6 +23,7 @@ namespace Glyde.Di.Registrations
             if (implementationType != null && factoryType != null)
                 throw new AmbigousContainerRegistrationException();
 
+            Lifecycle = Lifecycle.Transient;
             ImplementationType = implementationType;
             FactoryType = factoryType;
             Instance = instance;
@@ -59,6 +60,7 @@ namespace Glyde.Di.Registrations
         public void Use(TContract instance)
         {
             Instance = instance;
+            Lifecycle = Lifecycle.Singleton;
         }
     }
 }
