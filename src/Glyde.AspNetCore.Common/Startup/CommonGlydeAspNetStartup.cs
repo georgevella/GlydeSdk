@@ -2,6 +2,8 @@ using System;
 using System.Linq;
 using System.Reflection;
 using System.Threading;
+using Glyde.ApplicationSupport;
+using Glyde.ApplicationSupport.Bootstrapping;
 using Glyde.AspNetCore.ApiExplorer;
 using Glyde.AspNetCore.Bootstrapping;
 using Glyde.AspNetCore.Controllers;
@@ -29,6 +31,7 @@ namespace Glyde.AspNetCore.Startup
     public abstract class CommonGlydeAspNetStartup
     {
         private readonly Container _container = new Container();
+        private IGlydeApplication _app;
 
         protected CommonGlydeAspNetStartup(IHostingEnvironment env)
         {
@@ -48,10 +51,11 @@ namespace Glyde.AspNetCore.Startup
         {
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
-            BootstrapApplication
+            _app = BootstrapApplication
+                .Using(new ApplicationConfigurationBootstrapperStage(_container))
                 .Using(new SimpleInjectorDiBootstrapperStage(_container))
                 .Using(new AspNetCoreBootstrapperStage(applicationPartManager, services, _container))
-                .Run();
+                .CreateApplication();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -66,6 +70,8 @@ namespace Glyde.AspNetCore.Startup
             app.UseSimpleInjectorAspNetRequestScoping(_container);
 
             app.UseMvc();
+
+            _app.Start();
         }
 
         //        _container.Register(GetAspNetServiceProvider<UserManager<MyUser>>(app));

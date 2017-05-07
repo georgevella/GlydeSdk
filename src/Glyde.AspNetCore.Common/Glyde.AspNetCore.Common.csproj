@@ -45,6 +45,7 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Glyde.ApplicationSupport\Glyde.ApplicationSupport.csproj" />
     <ProjectReference Include="..\Glyde.Bootstrapper\Glyde.Bootstrapper.csproj" />
     <ProjectReference Include="..\Glyde.Configuration\Glyde.Configuration.csproj" />
     <ProjectReference Include="..\Glyde.Di.SimpleInjector\Glyde.Di.SimpleInjector.csproj" />

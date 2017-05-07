@@ -1,8 +1,7 @@
-﻿using System.Reflection;
-using Glyde.Bootstrapper.Internal;
-using Microsoft.Extensions.DependencyModel;
+﻿using Glyde.ApplicationSupport.Internals;
+using Glyde.Bootstrapper;
 
-namespace Glyde.Bootstrapper
+namespace Glyde.ApplicationSupport
 {
     public static class BootstrapApplication
     {
@@ -28,15 +27,6 @@ namespace Glyde.Bootstrapper
                 }
             };
         }
-
-    }
-
-    public interface IFluentAppBootstrappingConfiguration
-    {
-        IFluentAppBootstrappingConfiguration Using<TBootstrapperStage>()
-            where TBootstrapperStage : IBootstrapperStage, new();
-
-        IFluentAppBootstrappingConfiguration Using(IBootstrapperStage bootstrapperStage);
-        void Run();
     }
 }
+

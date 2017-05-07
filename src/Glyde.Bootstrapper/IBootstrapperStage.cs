@@ -3,8 +3,8 @@ using System.Reflection;
 
 namespace Glyde.Bootstrapper
 {
-    public interface IBootstrapperStage 
+    public interface IBootstrapperStage
     {
-        void Run(IEnumerable<Assembly> assemblies);
+        void RunStageBootstrappers(IGlydeApplication app, IEnumerable<Assembly> assemblies);
     }
 }

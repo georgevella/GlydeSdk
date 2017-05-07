@@ -24,7 +24,7 @@ namespace Glyde.AspNetCore.Bootstrapping
             _container = container;
         }
 
-        public void Run(IEnumerable<Assembly> assemblies)
+        public void RunStageBootstrappers(IGlydeApplication app, IEnumerable<Assembly> assemblies)
         {
             var list = assemblies.ToList();
 

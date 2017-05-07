@@ -1,10 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using Glyde.Bootstrapper;
 using Microsoft.Extensions.DependencyModel;
 
-namespace Glyde.Bootstrapper.Internal
+namespace Glyde.ApplicationSupport.Internals
 {
     internal class FluentAppBootstrappingConfiguration : IFluentAppBootstrappingConfiguration
     {
@@ -22,17 +22,21 @@ namespace Glyde.Bootstrapper.Internal
             return this;
         }
 
-        public void Run()
+        public IGlydeApplication CreateApplication()
         {
             var dependencyContext = DependencyContext.Load(Assembly.GetEntryAssembly());
             var ownAssemblies = dependencyContext.RuntimeLibraries
                 .SelectMany(l => l.GetDefaultAssemblyNames(dependencyContext).Select(Assembly.Load))
                 .ToList();
 
+            var app = new GlydeApplication();
+
             foreach (var stage in BootstrappingStages)
             {
-                stage.Run(ownAssemblies);
+                stage.RunStageBootstrappers(app, ownAssemblies);
             }
+
+            return app;
         }
     }
 }
