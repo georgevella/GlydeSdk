@@ -23,6 +23,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyModel;
 using Microsoft.Extensions.Logging;
 using SimpleInjector;
+using SimpleInjector.Extensions.ExecutionContextScoping;
 using SimpleInjector.Integration.AspNetCore;
 using SimpleInjector.Integration.AspNetCore.Mvc;
 
@@ -71,7 +72,11 @@ namespace Glyde.AspNetCore.Startup
 
             app.UseMvc();
 
-            _app.Start();
+            using (var scope = _container.BeginExecutionContextScope())
+            {
+                _app.Start();
+
+            }
         }
 
         //        _container.Register(GetAspNetServiceProvider<UserManager<MyUser>>(app));
