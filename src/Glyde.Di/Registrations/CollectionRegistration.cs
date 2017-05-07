@@ -52,5 +52,11 @@ namespace Glyde.Di.Registrations
         {
             containerConfiguration.AddCollectionRegistration<TContract>(Registrations);
         }
+
+        public void Use(TContract instance)
+        {
+            var reg = new ContractToImplementationRegistration<TContract>(instance: instance);
+            Registrations.Add(reg);
+        }
     }
 }

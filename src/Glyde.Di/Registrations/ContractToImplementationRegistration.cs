@@ -4,7 +4,7 @@ using Glyde.Di.Exceptions;
 
 namespace Glyde.Di.Registrations
 {
-    internal class ContractToImplementationRegistration<TContract> : 
+    internal class ContractToImplementationRegistration<TContract> :
         BaseRegistration,
         IContractToImplementationRegistration<TContract>,
         IRegistrationBuilder<TContract>
@@ -16,20 +16,23 @@ namespace Glyde.Di.Registrations
 
         public Func<TContract> FactoryMethod { get; private set; }
 
-        public ContractToImplementationRegistration(Type implementationType = null, Type factoryType = null)
+        public TContract Instance { get; private set; }
+
+        public ContractToImplementationRegistration(Type implementationType = null, Type factoryType = null, TContract instance = null)
         {
             if (implementationType != null && factoryType != null)
                 throw new AmbigousContainerRegistrationException();
 
             ImplementationType = implementationType;
             FactoryType = factoryType;
+            Instance = instance;
         }
         public ContractToImplementationRegistration(Func<TContract> factoryMethod)
         {
             FactoryMethod = factoryMethod;
         }
 
-        public IRegistrationLifecycleBuilder Use<TImplementation>() 
+        public IRegistrationLifecycleBuilder Use<TImplementation>()
             where TImplementation : TContract
         {
             ImplementationType = typeof(TImplementation);
@@ -51,6 +54,11 @@ namespace Glyde.Di.Registrations
         public override void Apply(IContainerConfiguration containerConfiguration)
         {
             containerConfiguration.AddRegistration(Lifecycle, this);
+        }
+
+        public void Use(TContract instance)
+        {
+            Instance = instance;
         }
     }
 }

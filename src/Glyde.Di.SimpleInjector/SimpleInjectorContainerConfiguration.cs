@@ -36,7 +36,7 @@ namespace Glyde.Di.SimpleInjector
             _container.AddRegistration(typeof(TContract), reg);
         }
 
-        public void AddCollectionRegistration<TContract>(IEnumerable<IContractToImplementationRegistration<TContract>> registrations) 
+        public void AddCollectionRegistration<TContract>(IEnumerable<IContractToImplementationRegistration<TContract>> registrations)
             where TContract : class
         {
             var simpleInjectorRegistrations = registrations
@@ -50,7 +50,7 @@ namespace Glyde.Di.SimpleInjector
             where TContract : class
         {
             var lifestyle = MapLifecycle(registration.Lifecycle);
-            
+
             if (registration.ImplementationType != null)
             {
                 return lifestyle.CreateRegistration(typeof(TContract), registration.ImplementationType, _container);
@@ -61,7 +61,7 @@ namespace Glyde.Di.SimpleInjector
                 _container.Register(typeof(IServiceFactory<TContract>), registration.FactoryType, lifestyle);
 
                 return lifestyle.CreateRegistration<TContract>(
-                    () => _container.GetInstance<IServiceFactory<TContract>>().Build(), 
+                    () => _container.GetInstance<IServiceFactory<TContract>>().Build(),
                     _container);
             }
 
@@ -69,6 +69,11 @@ namespace Glyde.Di.SimpleInjector
             {
                 return lifestyle.CreateRegistration<TContract>(registration.FactoryMethod,
                     _container);
+            }
+
+            if (registration.Instance != null)
+            {
+                return Lifestyle.Singleton.CreateRegistration(() => registration.Instance, _container);
             }
 
             throw new InvalidOperationException();

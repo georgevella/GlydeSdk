@@ -17,5 +17,7 @@ namespace Glyde.Di
             where TFactory : IServiceFactory<TContract>;
 
         IRegistrationLifecycleBuilder Use(Func<TContract> factoryMethod);
+
+        void Use(TContract instance);
     }
 }

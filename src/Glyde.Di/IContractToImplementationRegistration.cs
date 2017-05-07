@@ -7,5 +7,7 @@ namespace Glyde.Di
         Type ImplementationType { get; }
         Type FactoryType { get; }
         Func<TContract> FactoryMethod { get; }
+
+        TContract Instance { get; }
     }
 }
