@@ -3,12 +3,10 @@
     <TargetFramework>netstandard1.4</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Glyde.Bootstrapper\Glyde.Bootstrapper.csproj" />
-    <ProjectReference Include="..\Glyde.Configuration\Glyde.Configuration.csproj" />
+    <PackageReference Include="System.ComponentModel" Version="4.3.0" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="System.ComponentModel">
-      <HintPath>C:\Users\george\.nuget\packages\system.componentmodel\4.3.0\ref\netstandard1.0\System.ComponentModel.dll</HintPath>
-    </Reference>
+    <ProjectReference Include="..\Glyde.Bootstrapper\Glyde.Bootstrapper.csproj" />
+    <ProjectReference Include="..\Glyde.Configuration\Glyde.Configuration.csproj" />
   </ItemGroup>
 </Project>

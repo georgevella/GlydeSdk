@@ -6,18 +6,13 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.DependencyModel" Version="1.1.1" />
+    <PackageReference Include="SimpleInjector" Version="3.3.2" />
     <PackageReference Include="System.ComponentModel" Version="4.3.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Glyde.Bootstrapper\Glyde.Bootstrapper.csproj" />
     <ProjectReference Include="..\Glyde.Di\Glyde.Di.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Reference Include="SimpleInjector">
-      <HintPath>C:\Users\george\.nuget\packages\simpleinjector\3.3.2\lib\netstandard1.0\SimpleInjector.dll</HintPath>
-    </Reference>
   </ItemGroup>
 
 </Project>
