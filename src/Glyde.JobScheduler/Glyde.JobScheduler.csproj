@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard1.4</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Quartz" Version="3.0.0-alpha2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Glyde.Bootstrapper\Glyde.Bootstrapper.csproj" />
+    <ProjectReference Include="..\Glyde.Configuration\Glyde.Configuration.csproj" />
+    <ProjectReference Include="..\Glyde.Di\Glyde.Di.csproj" />
+  </ItemGroup>
+
+</Project>
