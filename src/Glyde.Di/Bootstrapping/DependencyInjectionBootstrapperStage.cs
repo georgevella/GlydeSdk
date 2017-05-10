@@ -2,11 +2,14 @@
 using System.Collections.Generic;
 using System.Reflection;
 using Glyde.Bootstrapper;
+using Glyde.Bootstrapper.Attributes;
 using Glyde.Configuration;
+using Glyde.Configuration.Bootstrapping;
 using Glyde.Di.Builder;
 
 namespace Glyde.Di.Bootstrapping
 {
+    [BootstrappingDependency(typeof(ConfigurationBootstrapperStage))]
     public abstract class DependencyInjectionBootstrapperStage : BootstrapperStage<IDependencyInjectionBootstrapper>
     {
         public override void RunStageBootstrappers(IGlydeApplication app, IEnumerable<Assembly> assemblies)

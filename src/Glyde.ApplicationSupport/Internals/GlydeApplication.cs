@@ -2,12 +2,15 @@
 using System.Threading.Tasks;
 using Glyde.ApplicationSupport.ApplicationStartup;
 using Glyde.Bootstrapper;
+using Glyde.Configuration;
 
 namespace Glyde.ApplicationSupport.Internals
 {
     internal class GlydeApplication : IGlydeApplication
     {
         public IServiceProvider ServiceProvider;
+
+        public IConfigurationService ConfigurationService;
 
         public async Task<IApplicationStartupResult> Start()
         {

@@ -9,6 +9,7 @@ using Glyde.AspNetCore.Bootstrapping;
 using Glyde.AspNetCore.Controllers;
 using Glyde.AspNetCore.Versioning;
 using Glyde.Bootstrapper;
+using Glyde.Configuration.Bootstrapping;
 using Glyde.Di.SimpleInjector;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -53,6 +54,7 @@ namespace Glyde.AspNetCore.Startup
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
             _app = BootstrapApplication
+                .Using(new ConfigurationBootstrapperStage())
                 .Using(new ApplicationConfigurationBootstrapperStage(_container))
                 .Using(new SimpleInjectorDiBootstrapperStage(_container))
                 .Using(new AspNetCoreBootstrapperStage(applicationPartManager, services, _container))

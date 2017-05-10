@@ -7,6 +7,10 @@
     <ProjectGuid>32a12279-2325-4f84-b451-3c920cfbbc6e</ProjectGuid>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="10.0.2" />
+    <PackageReference Include="System.ValueTuple" Version="4.3.0" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\Glyde.Bootstrapper\Glyde.Bootstrapper.csproj" />
   </ItemGroup>
 </Project>
