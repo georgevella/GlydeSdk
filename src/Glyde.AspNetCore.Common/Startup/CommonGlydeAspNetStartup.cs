@@ -44,7 +44,6 @@ namespace Glyde.AspNetCore.Startup
 
             var dependencyContext = DependencyContext.Load(Assembly.GetEntryAssembly());
             var ownAssemblies = dependencyContext.RuntimeLibraries
-                .Where(l => l.Name.ToLower().StartsWith("glyde"))
                 .SelectMany(l => l.GetDefaultAssemblyNames(dependencyContext).Select(Assembly.Load))
                 .ToList();
             _app = new ApplicationBootstrapper(ownAssemblies, _container)
