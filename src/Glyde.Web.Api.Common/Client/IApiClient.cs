@@ -10,7 +10,7 @@ namespace Glyde.Web.Api.Client
         Task<IEnumerable<TResource>> GetAll();
         Task<TResource> Create(TResource resource);
 
-        Task<TResource> Update(object id, TResource resource);
+        Task<bool> Update(object id, TResource resource);
         Task<TResource> Get(object id);
         Task Delete(object id);
     }
@@ -22,7 +22,7 @@ namespace Glyde.Web.Api.Client
         Task<IEnumerable<TResource>> GetAll();
         Task<TResource> Create(TResource resource);
 
-        Task<TResource> Update(TResourceId id, TResource resource);
+        Task<bool> Update(TResourceId id, TResource resource);
         Task<TResource> Get(TResourceId id);
         Task Delete(TResourceId id);
     }

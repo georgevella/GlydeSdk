@@ -5,6 +5,7 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
+using Glyde.Web.Api.Exceptions;
 using Glyde.Web.Api.Resources;
 using Newtonsoft.Json;
 
@@ -37,6 +38,8 @@ namespace Glyde.Web.Api.Client
                 JsonSerializer.Create().Serialize(writer, resource);
                 writer.Flush();
 
+                memoryStream.Position = 0;
+
                 var content = new StreamContent(memoryStream);
                 content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
 
@@ -44,7 +47,7 @@ namespace Glyde.Web.Api.Client
                 {
                     Content = content,
                 };
-                request.Headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse("application/json"));                
+                request.Headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse("application/json"));
                 var response = await _client.SendAsync(request);
 
                 if (response.StatusCode == HttpStatusCode.Created)
@@ -57,18 +60,66 @@ namespace Glyde.Web.Api.Client
                     }
                 }
 
+                if (response.StatusCode == HttpStatusCode.Conflict)
+                    throw new ResourceExistsException(resource.Id);
+
                 throw new InvalidOperationException();
-            }            
+            }
         }
 
-        public async Task<TResource> Update(TResourceId id, TResource resource)
+        public async Task<bool> Update(TResourceId id, TResource resource)
         {
-            throw new NotImplementedException();
+            var updateUri = BuildUriForResourceWithId(id);
+
+            using (var memoryStream = new MemoryStream())
+            using (var writer = new JsonTextWriter(new StreamWriter(memoryStream)))
+            {
+                JsonSerializer.Create().Serialize(writer, resource);
+
+                writer.Flush();
+                memoryStream.Position = 0;
+
+                var content = new StreamContent(memoryStream);
+                content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
+
+                var request = new HttpRequestMessage(HttpMethod.Put, updateUri)
+                {
+                    Content = content,
+                };
+                request.Headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse("application/json"));
+
+                var response = await _client.SendAsync(request);
+
+                switch (response.StatusCode)
+                {
+                    case HttpStatusCode.NoContent:
+                    case HttpStatusCode.NotModified:
+                        return response.StatusCode == HttpStatusCode.NoContent;
+                    default:
+                        throw new InvalidOperationException($"Update call returned [{response.StatusCode}]");
+                }
+            }
         }
 
         public async Task<TResource> Get(TResourceId id)
         {
-            throw new NotImplementedException();
+            var u = BuildUriForResourceWithId(id);
+
+            var response = await _client.GetAsync(u);
+            var stream = await response.Content.ReadAsStreamAsync();
+
+            using (var reader = new JsonTextReader(new StreamReader(stream)))
+            {
+                return JsonSerializer.Create().Deserialize<TResource>(reader);
+            }
+        }
+
+        private Uri BuildUriForResourceWithId(TResourceId id)
+        {
+            var baseUri = _resourceUri.ToString();
+            var idPart = baseUri.EndsWith("/") ? $"{id}" : $"/{id}";
+            var u = new Uri(baseUri + idPart, UriKind.Relative);
+            return u;
         }
 
         public async Task Delete(TResourceId id)
@@ -82,19 +133,19 @@ namespace Glyde.Web.Api.Client
             _resourceUri = resourceUri;
         }
 
-        async Task<TResource> IApiClient<TResource>.Update(object id, TResource resource)
+        async Task<bool> IApiClient<TResource>.Update(object id, TResource resource)
         {
-            return await Update((TResourceId) id, resource);
+            return await Update((TResourceId)id, resource);
         }
 
         async Task<TResource> IApiClient<TResource>.Get(object id)
         {
-            return await Get((TResourceId) id);
+            return await Get((TResourceId)id);
         }
 
         async Task IApiClient<TResource>.Delete(object id)
         {
-            await Delete((TResourceId) id);
+            await Delete((TResourceId)id);
         }
     }
 }
