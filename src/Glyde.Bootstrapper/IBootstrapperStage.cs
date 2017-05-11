@@ -5,6 +5,6 @@ namespace Glyde.Bootstrapper
 {
     public interface IBootstrapperStage
     {
-        void RunStageBootstrappers(IGlydeApplication app, IEnumerable<Assembly> assemblies);
+        void RunStageBootstrappers(IEnumerable<Assembly> assemblies);
     }
 }

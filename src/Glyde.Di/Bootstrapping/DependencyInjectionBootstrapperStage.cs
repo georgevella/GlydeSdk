@@ -1,18 +1,22 @@
-﻿using System;
+﻿using Glyde.Bootstrapper;
+using Glyde.Configuration;
+using Glyde.Di.Builder;
+using System;
 using System.Collections.Generic;
 using System.Reflection;
-using Glyde.Bootstrapper;
-using Glyde.Bootstrapper.Attributes;
-using Glyde.Configuration;
-using Glyde.Configuration.Bootstrapping;
-using Glyde.Di.Builder;
 
 namespace Glyde.Di.Bootstrapping
 {
-    [BootstrappingDependency(typeof(ConfigurationBootstrapperStage))]
     public abstract class DependencyInjectionBootstrapperStage : BootstrapperStage<IDependencyInjectionBootstrapper>
     {
-        public override void RunStageBootstrappers(IGlydeApplication app, IEnumerable<Assembly> assemblies)
+        private readonly IConfigurationService _configurationService;
+
+        protected DependencyInjectionBootstrapperStage(IConfigurationService configurationService)
+        {
+            _configurationService = configurationService;
+        }
+
+        public override void RunStageBootstrappers(IEnumerable<Assembly> assemblies)
         {
             var bootstrappers = GetBootstrappers(assemblies);
             var containerBuilder = new ContainerBuilder();
@@ -21,7 +25,7 @@ namespace Glyde.Di.Bootstrapping
 
             foreach (var bootstrapper in bootstrappers)
             {
-                bootstrapper.RegisterServices(containerBuilder, ConfigurationService);
+                bootstrapper.RegisterServices(containerBuilder, _configurationService);
             }
 
             containerBuilder.Apply(CreateContainerConfiguration());
@@ -30,7 +34,5 @@ namespace Glyde.Di.Bootstrapping
         protected abstract IContainerConfiguration CreateContainerConfiguration();
 
         protected abstract IServiceProvider GetServiceProvider();
-
-        public IConfigurationService ConfigurationService { get; set; }
     }
 }

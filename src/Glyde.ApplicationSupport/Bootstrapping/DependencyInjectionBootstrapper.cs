@@ -9,6 +9,7 @@ namespace Glyde.ApplicationSupport.Bootstrapping
         public void RegisterServices(IContainerBuilder containerBuilder, IConfigurationService configurationService)
         {
             containerBuilder.For<IStartupServiceFactory>().Use<StartupServiceFactory>();
+            containerBuilder.For<IConfigurationService>().Use(configurationService);
         }
     }
 }

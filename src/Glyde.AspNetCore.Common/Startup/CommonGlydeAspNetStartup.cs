@@ -1,24 +1,11 @@
-using System;
-using System.Linq;
-using System.Reflection;
-using System.Threading;
 using Glyde.ApplicationSupport;
-using Glyde.ApplicationSupport.Bootstrapping;
-using Glyde.AspNetCore.ApiExplorer;
 using Glyde.AspNetCore.Bootstrapping;
-using Glyde.AspNetCore.Controllers;
-using Glyde.AspNetCore.Versioning;
 using Glyde.Bootstrapper;
-using Glyde.Configuration.Bootstrapping;
-using Glyde.Di.SimpleInjector;
+using Glyde.Configuration.Loaders;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
-using Microsoft.AspNetCore.Mvc.Controllers;
-using Microsoft.AspNetCore.Mvc.Filters;
-using Microsoft.AspNetCore.Mvc.ViewComponents;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyModel;
@@ -26,7 +13,9 @@ using Microsoft.Extensions.Logging;
 using SimpleInjector;
 using SimpleInjector.Extensions.ExecutionContextScoping;
 using SimpleInjector.Integration.AspNetCore;
-using SimpleInjector.Integration.AspNetCore.Mvc;
+using System.Linq;
+using System.Reflection;
+using System.Threading;
 
 namespace Glyde.AspNetCore.Startup
 {
@@ -53,11 +42,14 @@ namespace Glyde.AspNetCore.Startup
         {
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
-            _app = BootstrapApplication
-                .Using(new ConfigurationBootstrapperStage())
-                .Using(new ApplicationConfigurationBootstrapperStage(_container))
-                .Using(new SimpleInjectorDiBootstrapperStage(_container))
+            var dependencyContext = DependencyContext.Load(Assembly.GetEntryAssembly());
+            var ownAssemblies = dependencyContext.RuntimeLibraries
+                .Where(l => l.Name.ToLower().StartsWith("glyde"))
+                .SelectMany(l => l.GetDefaultAssemblyNames(dependencyContext).Select(Assembly.Load))
+                .ToList();
+            _app = new ApplicationBootstrapper(ownAssemblies, _container)
                 .Using(new AspNetCoreBootstrapperStage(applicationPartManager, services, _container))
+                .ConfigureApplicationUsing<JsonConfigurationFileLoader>()
                 .CreateApplication();
         }
 

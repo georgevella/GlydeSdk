@@ -1,28 +1,41 @@
-﻿using System;
+﻿using Glyde.Configuration.Models;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using Glyde.Bootstrapper;
-using Glyde.Configuration.Models;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
-namespace Glyde.Configuration.Bootstrapping
+namespace Glyde.Configuration.Loaders
 {
-    public class ConfigurationBootstrapperStage : IBootstrapperStage
+    public class JsonConfigurationFileLoader : IConfigurationLoader
     {
-        /// <inheritdoc />
-        public void RunStageBootstrappers(IGlydeApplication app, IEnumerable<Assembly> assemblies)
-        {
-            var configurationSectionTypes = assemblies.SelectMany(a => a.DefinedTypes.Where(t => IsConfigurationSection(t.AsType()))).ToList();
+        private readonly string _filename;
 
-            var configurationSectionMap = configurationSectionTypes.Select(BuildMapping)
+        public JsonConfigurationFileLoader() : this("config.json")
+        {
+
+        }
+
+        public JsonConfigurationFileLoader(string filename)
+        {
+            _filename = filename;
+        }
+
+        /// <inheritdoc />
+        public IEnumerable<ConfigurationSection> Load(ApplicationConfigurationModel applicationConfigurationModel)
+        {
+            var configurationSectionMap = applicationConfigurationModel.ConfigurationSectionTypes
+                .Select(BuildMapping)
                 .ToDictionary(x => x.name, x => x.typeInfo);
 
             var configurationSections = new Dictionary<Type, ConfigurationSection>();
 
-            using (var json = new StreamReader(File.OpenRead("config.json")))
+            if (!File.Exists(_filename))
+                return configurationSections.Values;
+
+            using (var json = new StreamReader(File.OpenRead(_filename)))
             using (var reader = new JsonTextReader(json))
             {
                 var serializer = JsonSerializer.Create(new JsonSerializerSettings()
@@ -45,8 +58,9 @@ namespace Glyde.Configuration.Bootstrapping
                 }
             }
 
-            var configurationService = new ConfigurationService(configurationSections.Values);
+            return configurationSections.Values;
         }
+
 
         private (string name, TypeInfo typeInfo) BuildMapping(TypeInfo typeInfo)
         {
@@ -59,28 +73,6 @@ namespace Glyde.Configuration.Bootstrapping
                 name = name.Substring(0, name.Length - "configurationsection".Length);
 
             return (name, typeInfo);
-        }
-
-        private bool IsConfigurationSection(Type type)
-        {
-            var typeinfo = type.GetTypeInfo();
-            if (typeinfo.IsAbstract)
-                return false;
-
-            return InheritsFromConfigurationSection(type);
-        }
-
-        private bool InheritsFromConfigurationSection(Type type)
-        {
-            if (type == typeof(object))
-                return false;
-
-            if (type == typeof(ConfigurationSection))
-                return true;
-
-            var typeinfo = type.GetTypeInfo();
-
-            return InheritsFromConfigurationSection(typeinfo.BaseType);
         }
     }
 }

@@ -1,13 +1,13 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using Glyde.Bootstrapper;
+﻿using Glyde.Bootstrapper;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.ViewComponents;
 using Microsoft.Extensions.DependencyInjection;
 using SimpleInjector;
 using SimpleInjector.Integration.AspNetCore.Mvc;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 
 namespace Glyde.AspNetCore.Bootstrapping
 {
@@ -24,7 +24,7 @@ namespace Glyde.AspNetCore.Bootstrapping
             _container = container;
         }
 
-        public void RunStageBootstrappers(IGlydeApplication app, IEnumerable<Assembly> assemblies)
+        public void RunStageBootstrappers(IEnumerable<Assembly> assemblies)
         {
             var list = assemblies.ToList();
 

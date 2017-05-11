@@ -12,7 +12,7 @@ namespace Glyde.Bootstrapper
     public abstract class BootstrapperStage<TBootstrapperContract>
         : IBootstrapperStage where TBootstrapperContract : IBootstrapper
     {
-        public abstract void RunStageBootstrappers(IGlydeApplication app, IEnumerable<Assembly> assemblies);
+        public abstract void RunStageBootstrappers(IEnumerable<Assembly> assemblies);
 
         public IEnumerable<TBootstrapperContract> GetBootstrappers(IEnumerable<Assembly> assemblies)
         {

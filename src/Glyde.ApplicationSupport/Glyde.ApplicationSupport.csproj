@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Glyde.Bootstrapper\Glyde.Bootstrapper.csproj" />
+    <ProjectReference Include="..\Glyde.Di.SimpleInjector\Glyde.Di.SimpleInjector.csproj" />
     <ProjectReference Include="..\Glyde.Di\Glyde.Di.csproj" />
   </ItemGroup>
 

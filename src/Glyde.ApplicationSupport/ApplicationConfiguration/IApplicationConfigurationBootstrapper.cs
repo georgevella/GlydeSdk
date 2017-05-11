@@ -5,6 +5,6 @@ namespace Glyde.ApplicationSupport.ApplicationConfiguration
 {
     public interface IApplicationConfigurationBootstrapper : IBootstrapper
     {
-        void RegisterApplicationStartupService(IApplicationConfigurationBuilder applicationConfigurationBuilder, IConfigurationService configurationService);
+        void RegisterApplicationServices(IApplicationConfigurationBuilder applicationConfigurationBuilder, IConfigurationService configurationService);
     }
 }

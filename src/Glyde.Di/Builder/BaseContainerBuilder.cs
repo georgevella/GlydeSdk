@@ -20,7 +20,7 @@ namespace Glyde.Di.Builder
             return registration;
         }
 
-        internal void Apply(IContainerConfiguration containerConfiguration)
+        public void Apply(IContainerConfiguration containerConfiguration)
         {
             foreach (var reg in Registrations)
             {

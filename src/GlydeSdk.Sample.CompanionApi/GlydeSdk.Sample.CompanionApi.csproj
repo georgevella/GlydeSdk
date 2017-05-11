@@ -5,6 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Glyde.Di\Glyde.Di.csproj" />
     <ProjectReference Include="..\Glyde.Web.Api.Common\Glyde.Web.Api.Common.csproj" />
   </ItemGroup>
 

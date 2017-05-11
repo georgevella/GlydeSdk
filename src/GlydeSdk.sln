@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26403.7
+VisualStudioVersion = 15.0.26430.4
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Glyde.Di", "Glyde.Di\Glyde.Di.csproj", "{29867091-3AEC-4703-A72D-C9E6030C0A97}"
 EndProject
@@ -41,13 +41,17 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "webapi", "webapi", "{C5A04C
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GlydeSdk.Sample.CompanionApi", "GlydeSdk.Sample.CompanionApi\GlydeSdk.Sample.CompanionApi.csproj", "{1213A384-9E94-4581-BF28-E48652CD5BC9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Glyde.Data", "Glyde.Data\Glyde.Data.csproj", "{17DF0288-3CF5-458C-B6F5-033101DBC852}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Glyde.Data", "Glyde.Data\Glyde.Data.csproj", "{17DF0288-3CF5-458C-B6F5-033101DBC852}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Glyde.Data.EfCore", "Glyde.Data.EfCore\Glyde.Data.EfCore.csproj", "{DCC0186A-7F5B-40AC-936D-8E6FA97D616D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Glyde.Data.EfCore", "Glyde.Data.EfCore\Glyde.Data.EfCore.csproj", "{DCC0186A-7F5B-40AC-936D-8E6FA97D616D}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Glyde.ApplicationSupport", "Glyde.ApplicationSupport\Glyde.ApplicationSupport.csproj", "{0D0E0C58-047A-4B42-80F6-B25017CB6807}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "appsupport", "appsupport", "{639541DF-79A6-4DE2-8465-4D6051928908}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Glyde.JobScheduler", "Glyde.JobScheduler\Glyde.JobScheduler.csproj", "{0B90715A-EFF0-44BF-84E4-F3529E286F6C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Glyde.Configuration.UnitTests", "Glyde.Configuration.UnitTests\Glyde.Configuration.UnitTests.csproj", "{B95588CC-F942-4FA6-89F4-F3AFC5D0442A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -111,6 +115,14 @@ Global
 		{0D0E0C58-047A-4B42-80F6-B25017CB6807}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0D0E0C58-047A-4B42-80F6-B25017CB6807}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0D0E0C58-047A-4B42-80F6-B25017CB6807}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0B90715A-EFF0-44BF-84E4-F3529E286F6C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0B90715A-EFF0-44BF-84E4-F3529E286F6C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0B90715A-EFF0-44BF-84E4-F3529E286F6C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0B90715A-EFF0-44BF-84E4-F3529E286F6C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B95588CC-F942-4FA6-89F4-F3AFC5D0442A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B95588CC-F942-4FA6-89F4-F3AFC5D0442A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B95588CC-F942-4FA6-89F4-F3AFC5D0442A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B95588CC-F942-4FA6-89F4-F3AFC5D0442A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -131,5 +143,7 @@ Global
 		{17DF0288-3CF5-458C-B6F5-033101DBC852} = {7A8E1E64-5EC1-4B37-8447-4BC73AB81B4F}
 		{DCC0186A-7F5B-40AC-936D-8E6FA97D616D} = {7A8E1E64-5EC1-4B37-8447-4BC73AB81B4F}
 		{0D0E0C58-047A-4B42-80F6-B25017CB6807} = {639541DF-79A6-4DE2-8465-4D6051928908}
+		{0B90715A-EFF0-44BF-84E4-F3529E286F6C} = {639541DF-79A6-4DE2-8465-4D6051928908}
+		{B95588CC-F942-4FA6-89F4-F3AFC5D0442A} = {9A2404AE-0E7C-424A-85D1-5097B4396DC0}
 	EndGlobalSection
 EndGlobal

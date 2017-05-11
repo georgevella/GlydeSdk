@@ -1,6 +1,7 @@
-﻿using System;
+﻿using Glyde.Configuration;
 using Glyde.Di.Bootstrapping;
 using SimpleInjector;
+using System;
 
 namespace Glyde.Di.SimpleInjector
 {
@@ -9,7 +10,8 @@ namespace Glyde.Di.SimpleInjector
         private readonly Container _container;
         private readonly IContainerConfiguration _configurationBuilder;
 
-        public SimpleInjectorDiBootstrapperStage(Container container)
+        public SimpleInjectorDiBootstrapperStage(Container container, IConfigurationService configurationService)
+            : base(configurationService)
         {
             _container = container;
             _configurationBuilder = new SimpleInjectorContainerConfiguration(container);
