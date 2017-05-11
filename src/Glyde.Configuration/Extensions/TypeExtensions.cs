@@ -10,14 +10,14 @@ namespace Glyde.Configuration.Extensions
         {
             var type = typeinfo.AsType();
 
-            if (typeinfo.IsAbstract)
-                return false;
-
             if (type == typeof(object))
                 return false;
 
             if (type == typeof(ConfigurationSection))
                 return true;
+
+            if (typeinfo.IsAbstract)
+                return false;
 
             return IsConfigurationSection(typeinfo.BaseType.GetTypeInfo());
         }
