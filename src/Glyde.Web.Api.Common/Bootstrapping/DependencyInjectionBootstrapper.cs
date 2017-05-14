@@ -9,9 +9,9 @@ namespace Glyde.Web.Api.Bootstrapping
     {
         public void RegisterServices(IContainerBuilder containerBuilder, IConfigurationService configurationService)
         {
-            containerBuilder.For<IHttpClientFactory>().Use<HttpClientFactory>();
-            containerBuilder.For<IResourceMetadataProvider>().Use<ResourceMetadataProvider>();
-            containerBuilder.For<IApiClientFactory>().Use<ApiClientFactory>();
+            containerBuilder.For<IHttpClientFactory>().Use<HttpClientFactory>().AsSingleton();
+            containerBuilder.For<IResourceMetadataProvider>().Use<ResourceMetadataProvider>().AsSingleton();
+            containerBuilder.For<IApiClientFactory>().Use<ApiClientFactory>().AsSingleton();
         }
     }
 }
