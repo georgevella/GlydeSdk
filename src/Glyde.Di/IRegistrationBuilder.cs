@@ -18,6 +18,10 @@ namespace Glyde.Di
 
         IRegistrationLifecycleBuilder Use(Func<TContract> factoryMethod);
 
+        /// <summary>
+        ///     Creates a registration for <typeparamref name="TContract"/> that always returns the same instanced initialized externally.
+        /// </summary>
+        /// <param name="instance">The instance to use for all services depending on <typeparamref name="TContract"/>.</param>
         void Use(TContract instance);
     }
 }
