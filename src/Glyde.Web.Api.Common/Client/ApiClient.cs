@@ -106,12 +106,25 @@ namespace Glyde.Web.Api.Client
             var u = BuildUriForResourceWithId(id);
 
             var response = await _client.GetAsync(u);
-            var stream = await response.Content.ReadAsStreamAsync();
 
-            using (var reader = new JsonTextReader(new StreamReader(stream)))
+            switch (response.StatusCode)
             {
-                return JsonSerializer.Create().Deserialize<TResource>(reader);
+                case HttpStatusCode.OK:
+                    var stream = await response.Content.ReadAsStreamAsync();
+
+                    using (var reader = new JsonTextReader(new StreamReader(stream)))
+                    {
+                        return JsonSerializer.Create().Deserialize<TResource>(reader);
+                    }
+                case HttpStatusCode.NotFound:
+                    throw new ResourceDoesNotExistException(id);
+
+                case HttpStatusCode.MethodNotAllowed:
+                    throw new UnsupportedOperationException(id);
+                default:
+                    throw new InvalidOperationException($"An unknown response code obtained from the get call [{response.StatusCode}]");
             }
+
         }
 
         private Uri BuildUriForResourceWithId(TResourceId id)
@@ -148,4 +161,5 @@ namespace Glyde.Web.Api.Client
             await Delete((TResourceId)id);
         }
     }
+
 }
