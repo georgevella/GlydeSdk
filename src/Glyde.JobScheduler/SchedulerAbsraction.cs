@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using NLog;
 using Quartz;
 using Quartz.Impl.Matchers;
 using Quartz.Spi;
@@ -9,10 +10,12 @@ namespace Glyde.JobScheduler
 {
     public class SchedulerAbsraction : IScheduler
     {
+        private readonly ILogger _log;
         private readonly IScheduler _schedulerImplementation;
 
-        public SchedulerAbsraction(ISchedulerFactory schedulerFactory, IJobFactory jobFactory)
+        public SchedulerAbsraction(ISchedulerFactory schedulerFactory, IJobFactory jobFactory, ILogger log)
         {
+            _log = log;
             _schedulerImplementation = schedulerFactory.GetScheduler().Result;
             _schedulerImplementation.JobFactory = jobFactory;
 
@@ -80,6 +83,11 @@ namespace Glyde.JobScheduler
 
         public async Task<DateTimeOffset> ScheduleJob(IJobDetail jobDetail, ITrigger trigger)
         {
+            if (!IsStarted)
+            {
+                _log.Info("Scheduler was not started, starting now ...");
+                await Start();
+            }
             return await _schedulerImplementation.ScheduleJob(jobDetail, trigger);
         }
 
