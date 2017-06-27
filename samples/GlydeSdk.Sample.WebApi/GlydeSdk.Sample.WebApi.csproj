@@ -17,7 +17,7 @@
     <DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="1.0.0" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Glyde.AspNetCore.Common\Glyde.AspNetCore.Common.csproj" />
+    <ProjectReference Include="..\..\src\Glyde.AspNetCore.Common\Glyde.AspNetCore.Common.csproj" />
     <ProjectReference Include="..\GlydeSdk.Sample.CompanionApi\GlydeSdk.Sample.CompanionApi.csproj" />
   </ItemGroup>
 
