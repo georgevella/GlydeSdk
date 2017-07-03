@@ -6,23 +6,23 @@ using Glyde.Configuration;
 using Glyde.Configuration.Extensions;
 using Glyde.Configuration.Loaders;
 using Glyde.Configuration.Models;
-using SimpleInjector;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using Glyde.Di;
 
 namespace Glyde.ApplicationSupport.Bootstrapping
 {
-    public class ApplicationConfigurationBootstrapperStage : BootstrapperStage<IApplicationConfigurationBootstrapper>
+    public class ApplicationServicesBootstrapperStage : BootstrapperStage<IApplicationServicesBootstrapper>
     {
-        private readonly GlydeApplication _glydeApplication;
-        private readonly Container _container;
+        private readonly IContainerBuilder _containerBuilder;
+        private readonly IConfigurationService _configurationService;
 
-        public ApplicationConfigurationBootstrapperStage(IGlydeApplication glydeApplication, Container container)
+        public ApplicationServicesBootstrapperStage(IContainerBuilder containerBuilder, IConfigurationService configurationService)
         {
-            _glydeApplication = (GlydeApplication)glydeApplication;
-            _container = container;
+            _containerBuilder = containerBuilder;
+            _configurationService = configurationService;
         }
 
         public override void RunStageBootstrappers(IEnumerable<Assembly> assemblies)
@@ -34,13 +34,10 @@ namespace Glyde.ApplicationSupport.Bootstrapping
 
             foreach (var bootstrapper in bootstrappers)
             {
-                bootstrapper.RegisterApplicationServices(builder, ConfigurationService);
+                bootstrapper.RegisterApplicationServices(builder, _configurationService);
             }
 
-            var registrations = startupServices.Select(t => Lifestyle.Transient.CreateRegistration(t, _container));
-            _container.RegisterCollection<IRunOnStartup>(registrations);
-        }
-
-        public IConfigurationService ConfigurationService { get; set; }
+            startupServices.ForEach(t => _containerBuilder.For<IRunOnStartup>().Use(t).AsTransient());            
+        }        
     }
 }

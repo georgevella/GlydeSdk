@@ -10,6 +10,10 @@ namespace Glyde.Di.SimpleInjector
     {
         private readonly Container _container;
 
+        internal bool ContainsRegistrations { get; set; } = false;
+
+        public IContainer Container { get; }
+
         private Lifestyle MapLifecycle(Lifecycle lifecycle)
         {
             switch (lifecycle)
@@ -27,13 +31,16 @@ namespace Glyde.Di.SimpleInjector
 
         public SimpleInjectorContainerConfiguration(Container container)
         {
-            _container = container;
+            _container = container ?? throw new ArgumentNullException(nameof(container));
+            Container = new SimpleInjectorContainer(container, this);
         }
 
         public void AddRegistration<TContract>(Lifecycle lifecycle, IContractToImplementationRegistration<TContract> registration) where TContract : class
         {
             var reg = CreateSimpleInjectorRegistration(registration);
             _container.AddRegistration(typeof(TContract), reg);
+
+            ContainsRegistrations = true;
         }
 
         public void AddCollectionRegistration<TContract>(IEnumerable<IContractToImplementationRegistration<TContract>> registrations)
@@ -44,6 +51,8 @@ namespace Glyde.Di.SimpleInjector
                 .ToList();
 
             _container.RegisterCollection<TContract>(simpleInjectorRegistrations);
+
+            ContainsRegistrations = true;
         }
 
         private Registration CreateSimpleInjectorRegistration<TContract>(IContractToImplementationRegistration<TContract> registration)

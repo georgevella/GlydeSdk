@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26430.4
+VisualStudioVersion = 15.0.26430.14
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Glyde.Di", "Glyde.Di\Glyde.Di.csproj", "{29867091-3AEC-4703-A72D-C9E6030C0A97}"
 EndProject
@@ -52,6 +52,10 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Glyde.JobScheduler", "Glyde.JobScheduler\Glyde.JobScheduler.csproj", "{0B90715A-EFF0-44BF-84E4-F3529E286F6C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Glyde.Configuration.UnitTests", "Glyde.Configuration.UnitTests\Glyde.Configuration.UnitTests.csproj", "{B95588CC-F942-4FA6-89F4-F3AFC5D0442A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "console", "console", "{940D0821-3D0E-434A-9D30-8FD38EED94E6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GlydeSdk.Sample.SimpleConsoleApp", "..\samples\GlydeSdk.Sample.SimpleConsoleApp\GlydeSdk.Sample.SimpleConsoleApp.csproj", "{0DC507AF-03F9-4EF5-BA33-92BB4F59C3DE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -123,6 +127,10 @@ Global
 		{B95588CC-F942-4FA6-89F4-F3AFC5D0442A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B95588CC-F942-4FA6-89F4-F3AFC5D0442A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B95588CC-F942-4FA6-89F4-F3AFC5D0442A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0DC507AF-03F9-4EF5-BA33-92BB4F59C3DE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0DC507AF-03F9-4EF5-BA33-92BB4F59C3DE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0DC507AF-03F9-4EF5-BA33-92BB4F59C3DE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0DC507AF-03F9-4EF5-BA33-92BB4F59C3DE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -145,5 +153,7 @@ Global
 		{0D0E0C58-047A-4B42-80F6-B25017CB6807} = {639541DF-79A6-4DE2-8465-4D6051928908}
 		{0B90715A-EFF0-44BF-84E4-F3529E286F6C} = {639541DF-79A6-4DE2-8465-4D6051928908}
 		{B95588CC-F942-4FA6-89F4-F3AFC5D0442A} = {9A2404AE-0E7C-424A-85D1-5097B4396DC0}
+		{940D0821-3D0E-434A-9D30-8FD38EED94E6} = {A290022E-6B55-4DAA-A3B5-0C26A12FAF88}
+		{0DC507AF-03F9-4EF5-BA33-92BB4F59C3DE} = {940D0821-3D0E-434A-9D30-8FD38EED94E6}
 	EndGlobalSection
 EndGlobal

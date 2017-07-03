@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using Glyde.Di.SimpleInjector;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using SimpleInjector;
@@ -10,15 +11,17 @@ namespace Glyde.AspNetCore.Startup
     {
         public static void StartGlydeApplication(this IApplicationBuilder app)
         {
-            AspNetCoreApplication.Container.Register(() => app.ApplicationServices.GetRequiredService<IHttpContextAccessor>());
+            var simpleInjectorContainer = AspNetCoreApplicationContext.Instance.Container.AsSimpleInjectorContainer();
 
-            app.UseSimpleInjectorAspNetRequestScoping(AspNetCoreApplication.Container);
+            simpleInjectorContainer.Register(() => app.ApplicationServices.GetRequiredService<IHttpContextAccessor>());
+
+            app.UseSimpleInjectorAspNetRequestScoping(simpleInjectorContainer);
 
             app.UseMvc();
 
-            using (var scope = AspNetCoreApplication.Container.BeginExecutionContextScope())
+            using (var scope = simpleInjectorContainer.BeginExecutionContextScope())
             {
-                AspNetCoreApplication.Instance.Start();
+                AspNetCoreApplicationContext.Instance.Start();
             }
         }
     }

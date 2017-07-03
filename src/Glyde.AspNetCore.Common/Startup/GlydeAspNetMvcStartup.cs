@@ -6,7 +6,6 @@ namespace Glyde.AspNetCore.Startup
 {
     public class GlydeAspNetMvcStartup : CommonGlydeAspNetStartup
     {
-        // This method gets called by the runtime. Use this method to add services to the container.
         public GlydeAspNetMvcStartup(IHostingEnvironment env) : base(env)
         {
 
@@ -14,9 +13,7 @@ namespace Glyde.AspNetCore.Startup
 
         public void ConfigureServices(IServiceCollection services)
         {
-            var mvcBuilder = services.AddMvc();
-
-            ConfigureGlydeServices(mvcBuilder.PartManager, services);
+            services.AddMvc().BootstrapMvc(GetAssemblies(), services, Configuration);
         }        
     }
 }

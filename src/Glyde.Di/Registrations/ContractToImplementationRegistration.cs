@@ -52,6 +52,12 @@ namespace Glyde.Di.Registrations
             return new RegistrationLifeCycleBuilder(this);
         }
 
+        public IRegistrationLifecycleBuilder Use(Type type)
+        {
+            ImplementationType = type;
+            return new RegistrationLifeCycleBuilder(this);
+        }
+
         public override void Apply(IContainerConfiguration containerConfiguration)
         {
             containerConfiguration.AddRegistration(Lifecycle, this);

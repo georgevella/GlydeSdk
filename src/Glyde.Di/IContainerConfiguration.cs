@@ -6,6 +6,8 @@ namespace Glyde.Di
 {
     public interface IContainerConfiguration
     {
+        IContainer Container { get; }
+
         void AddRegistration<TContract>(Lifecycle lifecycle, IContractToImplementationRegistration<TContract> registration) where TContract : class;
 
         void AddCollectionRegistration<TContract>(IEnumerable<IContractToImplementationRegistration<TContract>> registrations) 

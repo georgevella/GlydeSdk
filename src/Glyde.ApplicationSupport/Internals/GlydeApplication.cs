@@ -1,20 +1,20 @@
 ﻿using Glyde.ApplicationSupport.ApplicationStartup;
 using Glyde.Bootstrapper;
 using Glyde.Configuration;
-using SimpleInjector;
 using System.Threading.Tasks;
+using Glyde.Di;
 
 namespace Glyde.ApplicationSupport.Internals
 {
     internal class GlydeApplication : IGlydeApplication
     {
-        public readonly Container ApplicationContainer;
-
         public IConfigurationService ConfigurationService;
+
+        public IContainer Container { get; }
 
         public async Task<IApplicationStartupResult> Start()
         {
-            var startupServiceFactory = ApplicationContainer.GetInstance<IStartupServiceFactory>();
+            var startupServiceFactory = Container.GetService<IStartupServiceFactory>();
 
             var startupServices = startupServiceFactory.GetAll();
 
@@ -26,9 +26,9 @@ namespace Glyde.ApplicationSupport.Internals
             return new SuccessfulStartupResult();
         }
 
-        public GlydeApplication(Container applicationContainer)
+        public GlydeApplication(IContainer applicationContainer)
         {
-            ApplicationContainer = applicationContainer;
+            Container = applicationContainer;
         }
     }
 }

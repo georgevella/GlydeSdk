@@ -3,7 +3,7 @@ using Glyde.Configuration;
 
 namespace Glyde.ApplicationSupport.ApplicationConfiguration
 {
-    public interface IApplicationConfigurationBootstrapper : IBootstrapper
+    public interface IApplicationServicesBootstrapper : IBootstrapper
     {
         void RegisterApplicationServices(IApplicationConfigurationBuilder applicationConfigurationBuilder, IConfigurationService configurationService);
     }

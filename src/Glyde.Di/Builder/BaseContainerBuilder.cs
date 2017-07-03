@@ -1,4 +1,5 @@
-﻿using Glyde.Di.Registrations;
+﻿using System.Linq;
+using Glyde.Di.Registrations;
 
 namespace Glyde.Di.Builder
 {
@@ -15,8 +16,12 @@ namespace Glyde.Di.Builder
 
         public ICollectionRegistrationBuilder<TContract> ForCollection<TContract>() where TContract : class
         {
-            var registration = new CollectionRegistration<TContract>();
-            Registrations.Add(registration);
+            var registration = Registrations.OfType<CollectionRegistration<TContract>>().FirstOrDefault();
+            if (registration == null)
+            {
+                registration = new CollectionRegistration<TContract>();
+                Registrations.Add(registration);
+            }
             return registration;
         }
 

@@ -48,6 +48,14 @@ namespace Glyde.Di.Registrations
             return new RegistrationLifeCycleBuilder(reg);
         }
 
+        public IRegistrationLifecycleBuilder Use(Type type)
+        {
+            var reg = new ContractToImplementationRegistration<TContract>(type);
+            Registrations.Add(reg);
+
+            return new RegistrationLifeCycleBuilder(reg);
+        }
+
         public override void Apply(IContainerConfiguration containerConfiguration)
         {
             containerConfiguration.AddCollectionRegistration<TContract>(Registrations);

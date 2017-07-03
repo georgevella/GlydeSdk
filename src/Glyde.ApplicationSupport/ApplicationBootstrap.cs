@@ -4,41 +4,34 @@ using Glyde.Bootstrapper;
 using Glyde.Configuration;
 using Glyde.Configuration.Extensions;
 using Glyde.Configuration.Models;
-using Glyde.Di.SimpleInjector;
-using SimpleInjector;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using Glyde.Di;
+using Glyde.Di.Builder;
+using Microsoft.Extensions.DependencyModel;
 
 namespace Glyde.ApplicationSupport
 {
     public class ApplicationBootstrapper
-        : IFluentAppBootstrappingConfiguration
+        : IFluentAppBootstrappingConfiguration, IUseBootstrapping, IUseDependencyInjection, IUseConfiguration
     {
-        private readonly IEnumerable<Assembly> _assemblies;
-        private readonly Container _bootstrapperContainer = new Container();
+        private readonly IList<Assembly> _assemblies;        
         private IConfigurationLoader _configurationLoader;
-        private readonly List<InstanceProducer<IBootstrapperStage>> _bootstrapperStageProducers
-            = new List<InstanceProducer<IBootstrapperStage>>();
+        private readonly ContainerBuilder _bootstrappingContainerBuilder = new ContainerBuilder();
 
-        private readonly GlydeApplication _application;
-
-        public ApplicationBootstrapper(IEnumerable<Assembly> assemblies) : this(assemblies, new Container())
+        public ApplicationBootstrapper()
         {
-
+            var dependencyContext = DependencyContext.Load(Assembly.GetEntryAssembly());
+            _assemblies = dependencyContext.RuntimeLibraries
+                .SelectMany(l => l.GetDefaultAssemblyNames(dependencyContext).Select(Assembly.Load))
+                .ToList();
         }
 
-        public ApplicationBootstrapper(IEnumerable<Assembly> assemblies, Container applicationContainer)
+        public ApplicationBootstrapper(IEnumerable<Assembly> assemblies)
         {
-            _assemblies = assemblies;
-            _application = new GlydeApplication(applicationContainer);
-            _bootstrapperContainer.Register<IGlydeApplication>(() => _application, Lifestyle.Singleton);
-            _bootstrapperContainer.Register<Container>(() => _application.ApplicationContainer);
-            _bootstrapperContainer.Register<IConfigurationService>(BuildConfigurationService);
-
-            Using<ApplicationConfigurationBootstrapperStage>();
-            Using<SimpleInjectorDiBootstrapperStage>();
+            _assemblies = assemblies.ToList();
         }
 
         private IConfigurationService BuildConfigurationService()
@@ -55,7 +48,7 @@ namespace Glyde.ApplicationSupport
 
         }
 
-        public IFluentAppBootstrappingConfiguration ConfigureApplicationUsing<TConfigurationLoader>()
+        public ApplicationBootstrapper ConfigureApplicationUsing<TConfigurationLoader>()
             where TConfigurationLoader : IConfigurationLoader, new()
         {
             _configurationLoader = new TConfigurationLoader();
@@ -63,15 +56,18 @@ namespace Glyde.ApplicationSupport
         }
 
 
-        public IFluentAppBootstrappingConfiguration Using<TBootstrapperStage>() where TBootstrapperStage : class, IBootstrapperStage
+        public ApplicationBootstrapper Use<TBootstrapperStage>() where TBootstrapperStage : class, IBootstrapperStage
         {
-            _bootstrapperStageProducers.Add(Lifestyle.Transient.CreateProducer<IBootstrapperStage, TBootstrapperStage>(_bootstrapperContainer));
+            _bootstrappingContainerBuilder.ForCollection<IBootstrapperStage>().Use<TBootstrapperStage>().AsTransient();
             return this;
         }
 
-        public IFluentAppBootstrappingConfiguration Using(IBootstrapperStage bootstrapperStage)
+        public ApplicationBootstrapper ConfigureBootstrappingContainer(Action<IContainerBuilder> bootstrappingContainerExtender)
         {
-            _bootstrapperStageProducers.Add(Lifestyle.Transient.CreateProducer<IBootstrapperStage>(() => bootstrapperStage, _bootstrapperContainer));
+            if (bootstrappingContainerExtender == null)
+                throw new ArgumentNullException(nameof(bootstrappingContainerExtender));
+
+            bootstrappingContainerExtender(_bootstrappingContainerBuilder);            
 
             return this;
         }
@@ -81,13 +77,66 @@ namespace Glyde.ApplicationSupport
             if (_configurationLoader == null)
                 throw new InvalidOperationException("Configuration loader not set");
 
-            foreach (var stageProducer in _bootstrapperStageProducers)
+            var bootstrappingContainerConfiguration = CreateContainerConfiguration();
+            var applicationContainerConfiguration = CreateContainerConfiguration();
+
+            if (bootstrappingContainerConfiguration == null || applicationContainerConfiguration == null)
             {
-                var stage = stageProducer.GetInstance();
+                throw new InvalidOperationException("No Dependency Injection provider is set up.");
+            }
+
+            var bootstrappingContainer = bootstrappingContainerConfiguration.Container;
+            var applicationContainer = applicationContainerConfiguration.Container;
+
+            // register the application container within the bootstrapping container
+            _bootstrappingContainerBuilder.For<IContainer>().Use(applicationContainer);
+
+            // register a container builder instance that will be used to setup the application container
+            var applicationContainerBuilder = new ContainerBuilder();
+            _bootstrappingContainerBuilder.For<IContainerBuilder>().Use(applicationContainerBuilder);
+            
+            // register an application container configuration instance (needed only for DI stage)
+            // _bootstrappingContainerBuilder.For<IContainerConfiguration>().Use(applicationContainerConfiguration);            
+
+            // register configuration service within bootstrapper container.
+            _bootstrappingContainerBuilder.For<IConfigurationService>().Use(BuildConfigurationService);
+
+            // setup all services in bootstrapping container
+            _bootstrappingContainerBuilder.Apply(bootstrappingContainerConfiguration);
+
+            var bootstrapperStages = bootstrappingContainer.GetServices<IBootstrapperStage>();
+
+            foreach (var stage in bootstrapperStages)
+            {
                 stage.RunStageBootstrappers(_assemblies);
             }
 
-            return _application;
+            // register glyde application instance within application container
+            applicationContainerBuilder.For<IGlydeApplication>().Use<GlydeApplication>().AsSingleton();
+
+            applicationContainerBuilder.Apply(applicationContainerConfiguration);
+
+            return applicationContainer.GetService<IGlydeApplication>();
+        }
+
+        private IContainerConfiguration CreateContainerConfiguration()
+        {
+            return ((IUseDependencyInjection)this).ContainerConfigurationFactory
+                ?.CreateContainerConfiguration();
+        }
+
+        IContainerConfigurationFactory IUseDependencyInjection.ContainerConfigurationFactory { get; set; }
+
+        IUseBootstrapping IUseBootstrapping.RegisterBootstrapperStage(IBootstrapperStage bootstrapperStage)
+        {
+            _bootstrappingContainerBuilder.ForCollection<IBootstrapperStage>().Use(() => bootstrapperStage);
+            return this;
+        }
+
+        IUseBootstrapping IUseBootstrapping.RegisterBootstrapperStage<TBootstrapperStage>()
+        {
+            Use<TBootstrapperStage>();
+            return this;
         }
     }
 }

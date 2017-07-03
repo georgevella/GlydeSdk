@@ -6,13 +6,11 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.DependencyModel" Version="1.1.1" />
-    <PackageReference Include="SimpleInjector" Version="3.3.2" />
     <PackageReference Include="System.ComponentModel" Version="4.3.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Glyde.Bootstrapper\Glyde.Bootstrapper.csproj" />
-    <ProjectReference Include="..\Glyde.Di.SimpleInjector\Glyde.Di.SimpleInjector.csproj" />
     <ProjectReference Include="..\Glyde.Di\Glyde.Di.csproj" />
   </ItemGroup>
 

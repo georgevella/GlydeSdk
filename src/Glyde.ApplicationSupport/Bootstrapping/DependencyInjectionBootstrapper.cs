@@ -4,7 +4,7 @@ using Glyde.Di;
 
 namespace Glyde.ApplicationSupport.Bootstrapping
 {
-    public class DependencyInjectionBootstrapper : IDependencyInjectionBootstrapper
+    internal class DependencyInjectionBootstrapper : IDependencyInjectionBootstrapper
     {
         public void RegisterServices(IContainerBuilder containerBuilder, IConfigurationService configurationService)
         {
