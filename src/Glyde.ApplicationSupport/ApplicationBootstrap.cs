@@ -94,9 +94,6 @@ namespace Glyde.ApplicationSupport
             // register a container builder instance that will be used to setup the application container
             var applicationContainerBuilder = new ContainerBuilder();
             _bootstrappingContainerBuilder.For<IContainerBuilder>().Use(applicationContainerBuilder);
-            
-            // register an application container configuration instance (needed only for DI stage)
-            // _bootstrappingContainerBuilder.For<IContainerConfiguration>().Use(applicationContainerConfiguration);            
 
             // register configuration service within bootstrapper container.
             _bootstrappingContainerBuilder.For<IConfigurationService>().Use(BuildConfigurationService);
