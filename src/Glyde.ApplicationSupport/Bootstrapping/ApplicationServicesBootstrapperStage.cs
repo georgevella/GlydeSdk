@@ -37,7 +37,7 @@ namespace Glyde.ApplicationSupport.Bootstrapping
                 bootstrapper.RegisterApplicationServices(builder, _configurationService);
             }
 
-            startupServices.ForEach(t => _containerBuilder.For<IRunOnStartup>().Use(t).AsTransient());            
+            startupServices.ForEach(t => _containerBuilder.ForCollection<IRunOnStartup>().Use(t).AsTransient());            
         }        
     }
 }
