@@ -1,5 +1,6 @@
 ﻿using Glyde.Configuration;
 using Glyde.Di;
+using Glyde.Di.Bootstrapping;
 using Glyde.Web.Api.Client;
 using Glyde.Web.Api.Resources;
 

@@ -1,6 +1,7 @@
 ﻿using System;
 using Glyde.ApplicationSupport;
 using Glyde.ApplicationSupport.Extensions;
+using Glyde.Configuration;
 using Glyde.Configuration.Loaders;
 using Glyde.Di;
 using Glyde.Di.SimpleInjector;
@@ -13,7 +14,7 @@ namespace GlydeSdk.Sample.SimpleConsoleApp
         static void Main(string[] args)
         {
             var app = new ApplicationBootstrapper()
-                .ConfigureApplicationUsing<EmptyConfigurationLoader>()
+                .UseConfiguration(new EmptyConfigurationLoader())
                 .UseApplicationServices()
                 .UseDependencyInjection(new SimpleInjectorContainerConfigurationFactory())
                 .CreateApplication();
@@ -23,6 +24,8 @@ namespace GlydeSdk.Sample.SimpleConsoleApp
             var service = app.Container.GetService<IService>();
 
             Console.WriteLine(service.GetValue());
+
+            Console.ReadKey();
         }
     }
 }

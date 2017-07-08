@@ -9,8 +9,8 @@ namespace Glyde.Bootstrapper
     ///     Base class implemented by all bootstrapper stages (configuration, dependency injection, etc)
     /// </summary>
     /// <typeparam name="TBootstrapperContract"></typeparam>
-    public abstract class BootstrapperStage<TBootstrapperContract>
-        : IBootstrapperStage where TBootstrapperContract : IBootstrapper
+    public abstract class BaseBootstrappingStage<TBootstrapperContract>
+        : IBootstrappingStage where TBootstrapperContract : IBootstrapper
     {
         public abstract void RunStageBootstrappers(IEnumerable<Assembly> assemblies);
 

@@ -10,6 +10,7 @@ using Glyde.AspNetCore.Bootstrapping;
 using Glyde.AspNetCore.Controllers;
 using Glyde.AspNetCore.Framework;
 using Glyde.AspNetCore.Versioning;
+using Glyde.Configuration;
 using Glyde.Configuration.Loaders;
 using Glyde.Di;
 using Glyde.Di.SimpleInjector;
@@ -93,8 +94,8 @@ namespace Glyde.AspNetCore.Startup
                 {
                     c.Options.DefaultScopedLifestyle = new AspNetRequestLifestyle();
                 }))
-                .Use<AspNetCoreBootstrapperStage>()
-                .ConfigureApplicationUsing<JsonConfigurationFileLoader>()
+                .UseConfiguration(new JsonConfigurationFileLoader())
+                .Use<AspNetCoreBootstrappingStage>()
                 .CreateApplication();
         }
     }

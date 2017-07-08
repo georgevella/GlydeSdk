@@ -2,7 +2,18 @@
 {
     public interface IUseBootstrapping
     {
-        IUseBootstrapping RegisterBootstrapperStage<TBootstrapperStage>() where TBootstrapperStage : class, IBootstrapperStage;
-        IUseBootstrapping RegisterBootstrapperStage(IBootstrapperStage bootstrapperStage);
+        IUseBootstrapping RegisterBootstrappingService<TBootstrappingService>()
+            where TBootstrappingService : class;
+
+        IUseBootstrapping RegisterBootstrappingService<TBootstrappingService, TImplementation>()
+            where TBootstrappingService : class
+            where TImplementation : TBootstrappingService;
+
+        IUseBootstrapping RegisterBootstrappingService<TBootstrappingService>(TBootstrappingService instance)
+            where TBootstrappingService : class;
+
+        IUseBootstrapping RegisterBootstrapperStage<TBootstrappingStage>() 
+            where TBootstrappingStage : class, IBootstrappingStage;
+        IUseBootstrapping RegisterBootstrapperStage(IBootstrappingStage bootstrappingStage);
     }
 }

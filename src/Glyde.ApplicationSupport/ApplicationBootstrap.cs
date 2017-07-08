@@ -15,10 +15,9 @@ using Microsoft.Extensions.DependencyModel;
 namespace Glyde.ApplicationSupport
 {
     public class ApplicationBootstrapper
-        : IFluentAppBootstrappingConfiguration, IUseBootstrapping, IUseDependencyInjection, IUseConfiguration
+        : IUseBootstrapping, IUseDependencyInjection, IUseConfiguration
     {
-        private readonly IList<Assembly> _assemblies;        
-        private IConfigurationLoader _configurationLoader;
+        private readonly IList<Assembly> _assemblies;                
         private readonly ContainerBuilder _bootstrappingContainerBuilder = new ContainerBuilder();
 
         public ApplicationBootstrapper()
@@ -40,25 +39,20 @@ namespace Glyde.ApplicationSupport
                 _assemblies.SelectMany(a => a.DefinedTypes.Where(t => t.IsConfigurationSection())).ToList();
 
             var applicationConfigurationModel = new ApplicationConfigurationModel(configurationSectionTypes);
-            var configurationSections = _configurationLoader.Load(applicationConfigurationModel);
 
-            var configurationService = new ConfigurationService(configurationSections);
+            if (ConfigurationLoader != null)
+            {
+                var configurationSections = ConfigurationLoader.Load(applicationConfigurationModel);
+                return new ConfigurationService(configurationSections);
+            }
 
-            return configurationService;
-
-        }
-
-        public ApplicationBootstrapper ConfigureApplicationUsing<TConfigurationLoader>()
-            where TConfigurationLoader : IConfigurationLoader, new()
-        {
-            _configurationLoader = new TConfigurationLoader();
-            return this;
+            return new ConfigurationService(Enumerable.Empty<ConfigurationSection>());
         }
 
 
-        public ApplicationBootstrapper Use<TBootstrapperStage>() where TBootstrapperStage : class, IBootstrapperStage
+        public ApplicationBootstrapper Use<TBootstrapperStage>() where TBootstrapperStage : class, IBootstrappingStage
         {
-            _bootstrappingContainerBuilder.ForCollection<IBootstrapperStage>().Use<TBootstrapperStage>().AsTransient();
+            _bootstrappingContainerBuilder.ForCollection<IBootstrappingStage>().Use<TBootstrapperStage>().AsTransient();
             return this;
         }
 
@@ -74,9 +68,6 @@ namespace Glyde.ApplicationSupport
 
         public IGlydeApplication CreateApplication()
         {
-            if (_configurationLoader == null)
-                throw new InvalidOperationException("Configuration loader not set");
-
             var bootstrappingContainerConfiguration = CreateContainerConfiguration();
             var applicationContainerConfiguration = CreateContainerConfiguration();
 
@@ -101,7 +92,7 @@ namespace Glyde.ApplicationSupport
             // setup all services in bootstrapping container
             _bootstrappingContainerBuilder.Apply(bootstrappingContainerConfiguration);
 
-            var bootstrapperStages = bootstrappingContainer.GetServices<IBootstrapperStage>();
+            var bootstrapperStages = bootstrappingContainer.GetServices<IBootstrappingStage>();
 
             foreach (var stage in bootstrapperStages)
             {
@@ -124,16 +115,41 @@ namespace Glyde.ApplicationSupport
 
         IContainerConfigurationFactory IUseDependencyInjection.ContainerConfigurationFactory { get; set; }
 
-        IUseBootstrapping IUseBootstrapping.RegisterBootstrapperStage(IBootstrapperStage bootstrapperStage)
+        IUseBootstrapping IUseBootstrapping.RegisterBootstrapperStage(IBootstrappingStage bootstrappingStage)
         {
-            _bootstrappingContainerBuilder.ForCollection<IBootstrapperStage>().Use(() => bootstrapperStage);
+            _bootstrappingContainerBuilder.ForCollection<IBootstrappingStage>().Use(() => bootstrappingStage);
+            return this;
+        }
+
+        IUseBootstrapping IUseBootstrapping.RegisterBootstrappingService<TBootstrappingService>()
+        {
+            _bootstrappingContainerBuilder.For<TBootstrappingService>().Use<TBootstrappingService>().AsSingleton();
+            return this;
+        }
+
+        IUseBootstrapping IUseBootstrapping.RegisterBootstrappingService<TBootstrappingService, TImplementation>()
+        {
+            _bootstrappingContainerBuilder.For<TBootstrappingService>().Use<TImplementation>().AsSingleton();
+            return this;
+        }
+
+        IUseBootstrapping IUseBootstrapping.RegisterBootstrappingService<TBootstrappingService>(TBootstrappingService instance)
+        {
+            _bootstrappingContainerBuilder.For<TBootstrappingService>().Use(instance);
             return this;
         }
 
         IUseBootstrapping IUseBootstrapping.RegisterBootstrapperStage<TBootstrapperStage>()
         {
-            Use<TBootstrapperStage>();
+            _bootstrappingContainerBuilder.ForCollection<IBootstrappingStage>().Use<TBootstrapperStage>().AsTransient();
             return this;
+        }
+
+        private IConfigurationLoader ConfigurationLoader { get; set; }
+
+        IConfigurationLoader IUseConfiguration.ConfigurationLoader
+        {
+            set => this.ConfigurationLoader = value;
         }
     }
 }

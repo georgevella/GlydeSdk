@@ -1,6 +1,7 @@
 ﻿using Glyde.ApplicationSupport.ApplicationStartup;
 using Glyde.Configuration;
 using Glyde.Di;
+using Glyde.Di.Bootstrapping;
 
 namespace Glyde.ApplicationSupport.Bootstrapping
 {

@@ -13,13 +13,13 @@ using Glyde.Di;
 
 namespace Glyde.AspNetCore.Bootstrapping
 {
-    public class AspNetCoreBootstrapperStage : IBootstrapperStage
+    public class AspNetCoreBootstrappingStage : IBootstrappingStage
     {
         private readonly ApplicationPartManager _applicationPartManager;
         private readonly IServiceCollection _services;
         private readonly IContainer _container;
 
-        public AspNetCoreBootstrapperStage(ApplicationPartManager applicationPartManager, IServiceCollection services, IContainer applicationContainer)
+        public AspNetCoreBootstrappingStage(ApplicationPartManager applicationPartManager, IServiceCollection services, IContainer applicationContainer)
         {
             _applicationPartManager = applicationPartManager;
             _services = services;

@@ -3,7 +3,7 @@ using System.Reflection;
 
 namespace Glyde.Bootstrapper
 {
-    public interface IBootstrapperStage
+    public interface IBootstrappingStage
     {
         void RunStageBootstrappers(IEnumerable<Assembly> assemblies);
     }

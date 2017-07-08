@@ -1,19 +1,18 @@
 ﻿using Glyde.Bootstrapper;
 using Glyde.Configuration;
-using Glyde.Di.Builder;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
 
 namespace Glyde.Di.Bootstrapping
 {
-    public class DependencyInjectionBootstrapperStage : BootstrapperStage<IDependencyInjectionBootstrapper>
+    internal class DependencyInjectionBootstrappingStage : BaseBootstrappingStage<IDependencyInjectionBootstrapper>
     {
         private readonly IContainer _applicationContainer;
         private readonly IContainerBuilder _containerBuilder;
         private readonly IConfigurationService _configurationService;
 
-        public DependencyInjectionBootstrapperStage(IContainer applicationContainer, IContainerBuilder containerBuilder, IConfigurationService configurationService)
+        public DependencyInjectionBootstrappingStage(IContainer applicationContainer, IContainerBuilder containerBuilder, IConfigurationService configurationService)
         {
             _applicationContainer = applicationContainer;
             _containerBuilder = containerBuilder;
@@ -29,7 +28,8 @@ namespace Glyde.Di.Bootstrapping
                 bootstrapper.RegisterServices(_containerBuilder, _configurationService);
             }
 
-            _containerBuilder.For<IServiceProvider>().Use(_applicationContainer);
+            // register application container within itself
+            _containerBuilder.For<IServiceProvider>().Use(_applicationContainer);            
             _containerBuilder.For<IContainer>().Use(_applicationContainer);            
         }
     }

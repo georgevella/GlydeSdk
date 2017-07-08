@@ -1,6 +1,7 @@
 ﻿using System;
 using Glyde.Configuration;
 using Glyde.Di;
+using Glyde.Di.Bootstrapping;
 using Quartz;
 using Quartz.Impl;
 using Quartz.Spi;

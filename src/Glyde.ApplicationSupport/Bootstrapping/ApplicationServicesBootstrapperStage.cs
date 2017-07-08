@@ -14,7 +14,7 @@ using Glyde.Di;
 
 namespace Glyde.ApplicationSupport.Bootstrapping
 {
-    public class ApplicationServicesBootstrapperStage : BootstrapperStage<IApplicationServicesBootstrapper>
+    public class ApplicationServicesBootstrapperStage : BaseBootstrappingStage<IApplicationServicesBootstrapper>
     {
         private readonly IContainerBuilder _containerBuilder;
         private readonly IConfigurationService _configurationService;

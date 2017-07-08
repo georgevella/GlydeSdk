@@ -1,6 +1,7 @@
 ﻿using Glyde.AspNetCore.Startup;
 using Glyde.Configuration;
 using Glyde.Di;
+using Glyde.Di.Bootstrapping;
 using Microsoft.AspNetCore.Http;
 
 namespace Glyde.AspNetCore.Bootstrapping
