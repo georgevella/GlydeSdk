@@ -53,7 +53,7 @@ namespace Glyde.AspNetCore.Startup
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
 
-            app.StartGlydeApplication();
+            app.UseGlydeSdkDefaults();
         }
 
         //        _container.Register(GetAspNetServiceProvider<UserManager<MyUser>>(app));

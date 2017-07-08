@@ -19,6 +19,7 @@ using Glyde.Web.Api.Resources;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
+using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -31,9 +32,9 @@ namespace Glyde.AspNetCore.Startup
     {
         private const string ControllerVersionTemplate = "ControllerVersionTemplate";
 
-        public static void BootstrapApi(this IMvcCoreBuilder mvcCoreBuilder, IEnumerable<Assembly> assemblies, IServiceCollection services, IConfigurationRoot configuration)
+        public static void BootstrapApi(this IMvcCoreBuilder mvcCoreBuilder, IEnumerable<Assembly> assemblies, IConfigurationRoot configuration)
         {
-            Bootstrap(mvcCoreBuilder.PartManager, assemblies, services);
+            Bootstrap(mvcCoreBuilder.PartManager, assemblies, mvcCoreBuilder.Services);
 
             var apiControllerMetadataProvider = new ApiControllerMetadataProvider();
 
@@ -44,7 +45,7 @@ namespace Glyde.AspNetCore.Startup
 
             mvcCoreBuilder.AddApiExplorer();
 
-            services.Configure<MvcOptions>(options =>
+            mvcCoreBuilder.Services.Configure<MvcOptions>(options =>
             {
                 // we support only json for now
                 var jsonFormatter = options.OutputFormatters.OfType<JsonOutputFormatter>().FirstOrDefault();
@@ -61,11 +62,11 @@ namespace Glyde.AspNetCore.Startup
                 options.Conventions.Add(new ApiExplorerVisibilityEnabledConvention());
             });
         }
-        public static void BootstrapMvc(this IMvcBuilder mvcCoreBuilder, IEnumerable<Assembly> assemblies, IServiceCollection services, IConfigurationRoot configuration)
+        public static void BootstrapMvc(this IMvcBuilder mvcBuilder, IEnumerable<Assembly> assemblies, IConfigurationRoot configuration)
         {
-            Bootstrap(mvcCoreBuilder.PartManager, assemblies, services);            
+            Bootstrap(mvcBuilder.PartManager, assemblies, mvcBuilder.Services);
 
-            services.Configure<MvcOptions>(options =>
+            mvcBuilder.Services.Configure<MvcOptions>(options =>
             {
                 // we support only json for now
                 var jsonFormatter = options.OutputFormatters.OfType<JsonOutputFormatter>().FirstOrDefault();
@@ -80,23 +81,23 @@ namespace Glyde.AspNetCore.Startup
 
         internal static void Bootstrap(ApplicationPartManager partManager, IEnumerable<Assembly> assemblies, IServiceCollection services)
         {
-            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            var assemblyList = assemblies as IList<Assembly> ?? assemblies.ToList();
+            assemblyList.ToList().ForEach(assembly => partManager.ApplicationParts.Add(new AssemblyPart(assembly)));            
 
-            AspNetCoreApplicationContext.Instance = new ApplicationBootstrapper(assemblies)
-                .ConfigureBootstrappingContainer(builder =>
-                {
-                    // register ASP.NET Core Framework components within bootstrapper container.
-                    builder.For<ApplicationPartManager>().Use(partManager);
-                    builder.For<IServiceCollection>().Use(services);
-                })
+            AspNetCoreApplicationContext.Instance = new ApplicationBootstrapper(assemblyList)
                 .UseApplicationServices()
-                .UseDependencyInjection(new SimpleInjectorContainerConfigurationFactory(c =>
-                {
-                    c.Options.DefaultScopedLifestyle = new AspNetRequestLifestyle();
-                }))
+                .UseDependencyInjection(
+                    new SimpleInjectorContainerConfigurationFactory(c =>
+                    {
+                        c.Options.DefaultScopedLifestyle = new AspNetRequestLifestyle();
+                    })
+                )
                 .UseConfiguration(new JsonConfigurationFileLoader())
-                .Use<AspNetCoreBootstrappingStage>()
                 .CreateApplication();
+
+            // register IHttpContextAccessor within ASP.NET framework DI
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddSingleton<IControllerActivator>(new ControllerActivator(AspNetCoreApplicationContext.Instance.Container));
         }
     }
 

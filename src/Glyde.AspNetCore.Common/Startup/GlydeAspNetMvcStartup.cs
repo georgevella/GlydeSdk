@@ -13,7 +13,7 @@ namespace Glyde.AspNetCore.Startup
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc().BootstrapMvc(GetAssemblies(), services, Configuration);
+            services.AddMvc().BootstrapMvc(GetAssemblies(), Configuration);
         }        
     }
 }

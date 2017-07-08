@@ -38,7 +38,7 @@ namespace Glyde.AspNetCore.Startup
                     settings.Formatting = Formatting.Indented;
                     settings.Converters.Add(new Newtonsoft.Json.Converters.StringEnumConverter());
                 })
-                .BootstrapApi(GetAssemblies(), services, Configuration);
+                .BootstrapApi(GetAssemblies(), Configuration);
         }
     }
 }
