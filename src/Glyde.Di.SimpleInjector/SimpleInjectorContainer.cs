@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using SimpleInjector;
+using SimpleInjector.Extensions.ExecutionContextScoping;
 
 namespace Glyde.Di.SimpleInjector
 {
@@ -37,6 +38,29 @@ namespace Glyde.Di.SimpleInjector
                 throw new InvalidOperationException("Container not yet setup");
 
             return Container.GetAllInstances<T>();
+        }
+
+        public IScope StartScope()
+        {
+            return new Scope(Container);
+        }
+    }
+
+    internal class Scope : IScope
+    {
+        private global::SimpleInjector.Scope _scope;
+
+        public Scope(Container container)
+        {
+            var container1 = container ?? throw new ArgumentNullException(nameof(container));
+            _scope = container1.BeginExecutionContextScope();
+        }
+
+
+        public void Dispose()
+        {
+            _scope?.Dispose();
+            _scope = null;
         }
     }
 }

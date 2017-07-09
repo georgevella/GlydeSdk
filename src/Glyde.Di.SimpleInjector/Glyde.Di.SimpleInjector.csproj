@@ -12,4 +12,9 @@
     <ProjectReference Include="..\Glyde.Configuration\Glyde.Configuration.csproj" />
     <ProjectReference Include="..\Glyde.Di\Glyde.Di.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <Reference Include="SimpleInjector.Extensions.ExecutionContextScoping">
+      <HintPath>C:\Users\georg\.nuget\packages\simpleinjector.extensions.executioncontextscoping\3.3.0\lib\netstandard1.3\SimpleInjector.Extensions.ExecutionContextScoping.dll</HintPath>
+    </Reference>
+  </ItemGroup>
 </Project>

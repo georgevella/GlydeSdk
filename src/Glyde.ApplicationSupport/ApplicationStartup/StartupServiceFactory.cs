@@ -3,11 +3,11 @@ using System.Linq;
 
 namespace Glyde.ApplicationSupport.ApplicationStartup
 {
-    class StartupServiceFactory : IStartupServiceFactory
+    internal class StartupServiceFactory : IStartupServiceFactory
     {
         private readonly IEnumerable<IRunOnStartup> _startupServices;
 
-        public StartupServiceFactory(IEnumerable<IRunOnStartup> startupServices)
+        public StartupServiceFactory(IEnumerable<IRunOnStartup> startupServices = null)
         {
             _startupServices = startupServices;
         }

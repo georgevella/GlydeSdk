@@ -95,18 +95,8 @@ namespace Glyde.AspNetCore.Startup
                 .UseConfiguration(new JsonConfigurationFileLoader())
                 .CreateApplication();
 
-            // register IHttpContextAccessor within ASP.NET framework DI
-            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            // register IHttpContextAccessor within ASP.NET framework DI            
             services.AddSingleton<IControllerActivator>(new ControllerActivator(AspNetCoreApplicationContext.Instance.Container));
         }
-    }
-
-    public interface IGlydeWebApiConfiguration
-    {
-        IGlydeWebApiConfiguration UseAssemblyList(IEnumerable<Assembly> assemblies);
-        IGlydeWebApiConfiguration SetVersioningTemplate(string versioningTemplate);
-        IGlydeWebApiConfiguration UseCustomJsonOutputSetings(JsonSerializerSettings jsonSerializerSettings);
-        IGlydeWebApiConfiguration UseCustomJsonInputSetings(JsonSerializerSettings jsonSerializerSettings);
-
     }
 }

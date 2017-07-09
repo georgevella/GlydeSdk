@@ -12,9 +12,7 @@ namespace Glyde.AspNetCore.Bootstrapping
             IConfigurationService configurationService)
         {
             // register HTTP context accessor for those modules that need the http context
-            //containerBuilder.For<IHttpContextAccessor>().Use<OwnHttpContextAccessor>().AsSingleton();
-
-            //services.AddTransient<IApplicationModelProvider, GlydeApplicationModelProvider>();
+            containerBuilder.For<IHttpContextAccessor>().Use<HttpContextAccessor>().AsScoped();
         }
     }
 }

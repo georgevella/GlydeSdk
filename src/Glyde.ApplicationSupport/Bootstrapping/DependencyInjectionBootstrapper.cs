@@ -10,6 +10,9 @@ namespace Glyde.ApplicationSupport.Bootstrapping
         public void RegisterServices(IContainerBuilder containerBuilder, IConfigurationService configurationService)
         {
             containerBuilder.For<IStartupServiceFactory>().Use<StartupServiceFactory>();
+            // start an empty collection registration of IRunOnStartup services
+            containerBuilder.ForCollection<IRunOnStartup>();
+
             containerBuilder.For<IConfigurationService>().Use(configurationService);
         }
     }

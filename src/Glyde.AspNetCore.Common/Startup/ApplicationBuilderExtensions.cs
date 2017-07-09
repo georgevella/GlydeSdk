@@ -1,9 +1,5 @@
-﻿using Glyde.Di.SimpleInjector;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.DependencyInjection;
-using SimpleInjector;
-using SimpleInjector.Extensions.ExecutionContextScoping;
 
 namespace Glyde.AspNetCore.Startup
 {
@@ -11,17 +7,29 @@ namespace Glyde.AspNetCore.Startup
     {
         public static void UseGlydeSdkDefaults(this IApplicationBuilder app)
         {
-            // TODO remove this hard dependency on SimpleInjector
-            var simpleInjectorContainer = AspNetCoreApplicationContext.Instance.Container.AsSimpleInjectorContainer();
+            app.Use(async (context, next) =>
+            {
+                // start dependency injection scope
+                var scope = AspNetCoreApplicationContext.Instance.Container.StartScope();
 
-            // add a registration for IHttpContextAccessor within application container
-            simpleInjectorContainer.Register(() => app.ApplicationServices.GetRequiredService<IHttpContextAccessor>());
+                // setup httpcontextaccessor
+                var httpContextAccessor = AspNetCoreApplicationContext.Instance.Container
+                    .GetService<IHttpContextAccessor>();
 
-            // setup DI scoping
-            app.UseSimpleInjectorAspNetRequestScoping(simpleInjectorContainer);
+                httpContextAccessor.HttpContext = context;
+
+                try
+                {
+                    await next();
+                }
+                finally
+                {
+                    scope.Dispose();
+                }
+            });
 
             // invoke startup services
-            using (var scope = simpleInjectorContainer.BeginExecutionContextScope())
+            using (AspNetCoreApplicationContext.Instance.Container.StartScope())
             {
                 AspNetCoreApplicationContext.Instance.Start();
             }
