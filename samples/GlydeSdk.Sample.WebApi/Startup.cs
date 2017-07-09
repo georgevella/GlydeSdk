@@ -41,7 +41,7 @@ namespace GlydeSdk.Sample.WebApi
                     settings.Formatting = Formatting.Indented;
                     settings.Converters.Add(new Newtonsoft.Json.Converters.StringEnumConverter());
                 })
-                .BootstrapApi(ownAssemblies, services, Configuration);
+                .BootstrapApi(ownAssemblies, Configuration);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -52,7 +52,7 @@ namespace GlydeSdk.Sample.WebApi
 
             app.UseMvc();
 
-            app.StartGlydeApplication();
+            app.UseGlydeSdkDefaults();
         }
     }
 

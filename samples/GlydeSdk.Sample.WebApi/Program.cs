@@ -17,7 +17,7 @@ namespace GlydeSdk.Sample.WebApi
                 .UseKestrel()
                 .UseContentRoot(Directory.GetCurrentDirectory())
                 .UseIISIntegration()
-                .UseGlydeBootstrappingForApi()
+                .UseStartup<Startup>()
                 .Build();
 
             host.Run();

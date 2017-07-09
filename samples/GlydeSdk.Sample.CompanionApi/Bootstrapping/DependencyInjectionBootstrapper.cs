@@ -1,5 +1,6 @@
 ﻿using Glyde.Configuration;
 using Glyde.Di;
+using Glyde.Di.Bootstrapping;
 
 namespace GlydeSdk.Sample.CompanionApi.Bootstrapping
 {
